@@ -819,8 +819,32 @@ let filteredLeads = [];
 let currentIndustry = 'retail';
 let currentBizType = 'all';
 let pollInterval = null;
+let localGenTimer = null;
 
 const API = 'http://localhost:5000/api';
+
+function resetResults() {
+  // Clear any pending generation
+  if (localGenTimer) { clearTimeout(localGenTimer); localGenTimer = null; }
+  if (pollInterval) { clearInterval(pollInterval); pollInterval = null; }
+  // Reset data
+  allLeads = [];
+  filteredLeads = [];
+  // Clear search input
+  const si = document.getElementById('searchInput');
+  if (si) si.value = '';
+  // Hide stats
+  document.getElementById('statsRow').style.display = 'none';
+  document.getElementById('exportBar').style.display = 'none';
+  document.getElementById('resultCount').textContent = '';
+  // Clear table
+  document.getElementById('tableContainer').innerHTML = `
+    <div class="empty-state">
+      <div class="es-icon">⏳</div>
+      <h4>Generating fresh leads...</h4>
+      <p>Please wait while we find quality contacts for you</p>
+    </div>`;
+}
 
 function selectIndustry(el) {
   document.querySelectorAll('.industry-chip').forEach(c => c.classList.remove('selected'));
@@ -837,6 +861,8 @@ function selectType(el) {
 async function generateLeads() {
   const location = document.getElementById('location').value || 'Bangalore';
   const count = parseInt(document.getElementById('countSlider').value);
+
+  resetResults();
 
   const btn = document.getElementById('genBtn');
   btn.disabled = true;
@@ -899,7 +925,8 @@ function generateLocally(count, location) {
     setProgress(prog, `Processing ${Math.floor(prog * count / 100)} of ${count} leads...`);
   }, 60);
 
-  setTimeout(() => {
+  localGenTimer = setTimeout(() => {
+    localGenTimer = null;
     clearInterval(interval);
     for (let i = 0; i < count; i++) {
       const t = templates[i % templates.length];
@@ -949,12 +976,9 @@ function generateLocally(count, location) {
     filteredLeads = [...leads];
     renderTable(filteredLeads);
     renderStats(leads);
-
-    setTimeout(() => {
-      document.getElementById('progressWrap').style.display = 'none';
-      document.getElementById('genBtn').disabled = false;
-      document.getElementById('genBtn').innerHTML = '⚡ Generate Leads Now';
-    }, 800);
+    document.getElementById('progressWrap').style.display = 'none';
+    document.getElementById('genBtn').disabled = false;
+    document.getElementById('genBtn').innerHTML = '⚡ Generate Leads Now';
 
     toast(`✅ ${count} quality leads generated!`);
   }, count * 60 + 500);
