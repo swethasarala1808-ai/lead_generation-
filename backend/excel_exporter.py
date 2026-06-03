@@ -1,125 +1,134 @@
 import openpyxl
-from openpyxl.styles import Font, PatternFill, Alignment, Border, Side, GradientFill
+from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
 import os, time
 
+NAVY  = "0F1B2D"
+SILVER= "E2E8F0"
+ALT   = "F0F4FF"
+ACCENT= "1967D2"
+GOLD  = "F5A623"
+GREEN = "00B050"
+
+def _thin_border():
+    s = Side(style="thin", color="CCCCCC")
+    return Border(left=s, right=s, top=s, bottom=s)
+
 class ExcelExporter:
-    def export(self, leads, job_id):
+
+    def export(self, leads: list, job_id: str, source: str = "") -> str:
+        if not leads:
+            raise ValueError("No leads to export")
+
         wb = openpyxl.Workbook()
         ws = wb.active
         ws.title = "Leads"
+        border = _thin_border()
+        headers = list(leads[0].keys())
 
-        # ── Colors ──
-        HEADER_BG   = "1A1A2E"   # deep navy
-        HEADER_FG   = "E0E0E0"   # light silver
-        ALT_ROW     = "F0F4FF"   # soft blue-white
-        ACCENT      = "0F3460"   # navy accent
-        GREEN_SCORE = "00B050"   # quality score green
-        GOLD        = "FFD700"
-
-        thin = Side(style="thin", color="CCCCCC")
-        border = Border(left=thin, right=thin, top=thin, bottom=thin)
-
-        headers = list(leads[0].keys()) if leads else []
-
-        # Title row
+        # ── Title ──
         ws.merge_cells(f"A1:{get_column_letter(len(headers))}1")
-        title_cell = ws["A1"]
-        title_cell.value = "🎯  LeadGen Pro — Quality Lead Report"
-        title_cell.font = Font(name="Calibri", bold=True, size=16, color=GOLD)
-        title_cell.fill = PatternFill("solid", fgColor=HEADER_BG)
-        title_cell.alignment = Alignment(horizontal="center", vertical="center")
+        tc = ws["A1"]
+        tc.value = "🎯  LeadGen Pro — Quality B2B Lead Report"
+        tc.font  = Font(name="Calibri", bold=True, size=16, color=GOLD)
+        tc.fill  = PatternFill("solid", fgColor=NAVY)
+        tc.alignment = Alignment(horizontal="center", vertical="center")
         ws.row_dimensions[1].height = 36
 
-        # Sub-title row
         ws.merge_cells(f"A2:{get_column_letter(len(headers))}2")
         sub = ws["A2"]
-        sub.value = f"Total Leads: {len(leads)}  |  Generated: {time.strftime('%d %b %Y %H:%M')}"
-        sub.font = Font(name="Calibri", italic=True, size=10, color="AAAAAA")
-        sub.fill = PatternFill("solid", fgColor=HEADER_BG)
+        src_label = "IndiaMART (Live)" if "indiamart" in source else ("Google Places (Live)" if "google" in source else "Mixed Sources")
+        sub.value = f"Source: {src_label}  |  Leads: {len(leads)}  |  Exported: {time.strftime('%d %b %Y %H:%M')}"
+        sub.font  = Font(name="Calibri", italic=True, size=10, color="94A3B8")
+        sub.fill  = PatternFill("solid", fgColor=NAVY)
         sub.alignment = Alignment(horizontal="center", vertical="center")
         ws.row_dimensions[2].height = 20
 
-        # Header row
-        for col_idx, header in enumerate(headers, 1):
-            cell = ws.cell(row=3, column=col_idx, value=header)
-            cell.font = Font(name="Calibri", bold=True, size=10, color=HEADER_FG)
-            cell.fill = PatternFill("solid", fgColor=ACCENT)
+        # ── Header row ──
+        for ci, h in enumerate(headers, 1):
+            cell = ws.cell(row=3, column=ci, value=h)
+            cell.font      = Font(name="Calibri", bold=True, size=10, color=SILVER)
+            cell.fill      = PatternFill("solid", fgColor=ACCENT)
             cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
-            cell.border = border
+            cell.border    = border
         ws.row_dimensions[3].height = 30
 
-        # Data rows
-        for row_idx, lead in enumerate(leads, 4):
-            is_alt = (row_idx % 2 == 0)
-            for col_idx, header in enumerate(headers, 1):
-                value = lead.get(header, "")
-                cell = ws.cell(row=row_idx, column=col_idx, value=value)
-                cell.font = Font(name="Calibri", size=9)
-                cell.alignment = Alignment(horizontal="left", vertical="center", wrap_text=False)
-                cell.border = border
+        # ── Data ──
+        for ri, lead in enumerate(leads, 4):
+            is_alt = (ri % 2 == 0)
+            for ci, h in enumerate(headers, 1):
+                val  = lead.get(h, "")
+                cell = ws.cell(row=ri, column=ci, value=val)
+                cell.font      = Font(name="Calibri", size=9)
+                cell.alignment = Alignment(horizontal="left", vertical="center")
+                cell.border    = border
                 if is_alt:
-                    cell.fill = PatternFill("solid", fgColor=ALT_ROW)
-
-                # Special formatting
-                if header == "Lead Quality Score" and value:
-                    score = int(value.replace("%",""))
-                    if score >= 85:
-                        cell.font = Font(name="Calibri", size=9, bold=True, color=GREEN_SCORE)
-                    elif score >= 70:
+                    cell.fill = PatternFill("solid", fgColor=ALT)
+                # colour accents
+                if h == "Lead Quality Score" and val:
+                    n = int(str(val).replace("%",""))
+                    if n >= 85:
+                        cell.font = Font(name="Calibri", size=9, bold=True, color=GREEN)
+                    elif n >= 70:
                         cell.font = Font(name="Calibri", size=9, color="FFA500")
-                if header == "GSTIN" and value:
-                    cell.font = Font(name="Calibri", size=9, color="0070C0")
-                if header == "Registration Type":
-                    if "MSME" in str(value):
-                        cell.font = Font(name="Calibri", size=9, bold=True, color="7030A0")
-                    elif "Startup" in str(value):
-                        cell.font = Font(name="Calibri", size=9, bold=True, color="C00000")
+                if h == "Source" and "IndiaMART" in str(val):
+                    cell.font = Font(name="Calibri", size=9, bold=True, color="C00000")
+                if h == "Source" and "Google" in str(val):
+                    cell.font = Font(name="Calibri", size=9, bold=True, color=ACCENT)
+                if h in ("Mobile Number","Buyer Mobile") and val:
+                    cell.font = Font(name="Calibri", size=9, color="047857")
 
-        # Column widths
-        col_widths = {
-            "Sr No": 6, "Company Name": 28, "Business Type": 22, "Registration Type": 22,
-            "Owner / Contact Person": 22, "Designation": 16, "Mobile Number": 15,
-            "Alternate Mobile": 15, "Email ID": 30, "Website": 28,
-            "Address": 30, "City": 14, "State": 16, "Pincode": 10,
-            "Industry": 14, "Annual Turnover": 16, "No. of Employees": 14,
-            "Year Established": 14, "GSTIN": 22, "WhatsApp Available": 14,
-            "Lead Quality Score": 14, "Source": 14, "Remarks": 24,
+        # ── Column widths ──
+        WIDTHS = {
+            "Sr No":8,"Company Name":28,"Buyer Name":22,"Business Type":20,
+            "Registration Type":20,"Owner / Contact Person":22,"Mobile Number":16,
+            "Buyer Mobile":16,"Alternate Mobile":16,"Email ID":28,"Buyer Email":28,
+            "Website":26,"Address":32,"Buyer Address":32,"City":14,"Buyer City":14,
+            "State":16,"Buyer State":16,"Pincode":10,"Google Rating":14,
+            "No. of Reviews":14,"Opening Hours":26,"Lead Quality Score":16,
+            "WhatsApp Available":14,"Google Maps Link":28,"Source":22,
+            "Remarks":24,"Product / Requirement":28,"Buyer Message":40,
+            "Lead Type":20,"Received At":20,"Lead ID":14,
         }
-        for col_idx, header in enumerate(headers, 1):
-            ws.column_dimensions[get_column_letter(col_idx)].width = col_widths.get(header, 15)
+        for ci, h in enumerate(headers, 1):
+            ws.column_dimensions[get_column_letter(ci)].width = WIDTHS.get(h, 16)
 
-        # Freeze panes
         ws.freeze_panes = "A4"
-
-        # Auto-filter
         ws.auto_filter.ref = f"A3:{get_column_letter(len(headers))}{len(leads)+3}"
 
-        # Summary sheet
+        # ── Summary sheet ──
         ws2 = wb.create_sheet("Summary")
-        ws2["A1"] = "Lead Generation Summary"
-        ws2["A1"].font = Font(name="Calibri", bold=True, size=14, color=HEADER_FG)
-        ws2["A1"].fill = PatternFill("solid", fgColor=HEADER_BG)
         ws2.merge_cells("A1:C1")
-        ws2["A1"].alignment = Alignment(horizontal="center")
-
-        summary_data = [
-            ("Total Leads Generated", len(leads)),
-            ("Industry", leads[0].get("Industry","") if leads else ""),
-            ("City", leads[0].get("City","") if leads else ""),
-            ("MSME Registered", sum(1 for l in leads if "MSME" in l.get("Registration Type",""))),
-            ("Startup Registered", sum(1 for l in leads if "Startup" in l.get("Registration Type",""))),
-            ("Leads with GSTIN", sum(1 for l in leads if l.get("GSTIN",""))),
-            ("Leads with Website", sum(1 for l in leads if l.get("Website",""))),
-            ("Leads with WhatsApp", sum(1 for l in leads if l.get("WhatsApp Available","") == "Yes")),
-            ("High Quality Leads (>85%)", sum(1 for l in leads if l.get("Lead Quality Score","").replace("%","").isdigit() and int(l.get("Lead Quality Score","0%").replace("%","")) >= 85)),
+        c = ws2["A1"]
+        c.value = "Lead Generation Summary"
+        c.font  = Font(name="Calibri", bold=True, size=14, color=SILVER)
+        c.fill  = PatternFill("solid", fgColor=NAVY)
+        c.alignment = Alignment(horizontal="center")
+        rows = [
+            ("Total Leads",     len(leads)),
+            ("Source",          src_label),
+            ("Export Date",     time.strftime("%d %b %Y %H:%M")),
+            ("With Phone",      sum(1 for l in leads if l.get("Mobile Number") or l.get("Buyer Mobile"))),
+            ("With Email",      sum(1 for l in leads if l.get("Email ID") or l.get("Buyer Email"))),
+            ("With Website",    sum(1 for l in leads if l.get("Website") or l.get("Full Website URL"))),
         ]
-        for r, (label, val) in enumerate(summary_data, 3):
-            ws2.cell(row=r, column=1, value=label).font = Font(name="Calibri", bold=True, size=10)
-            ws2.cell(row=r, column=2, value=val).font = Font(name="Calibri", size=10)
-            ws2.cell(row=r, column=1).fill = PatternFill("solid", fgColor="E8EAF6")
-        ws2.column_dimensions["A"].width = 30
-        ws2.column_dimensions["B"].width = 20
+        if "google" in source:
+            rows += [
+                ("High Rated (≥4★)", sum(1 for l in leads if l.get("Google Rating","").startswith(("4","5")))),
+                ("High Quality >85%", sum(1 for l in leads if str(l.get("Lead Quality Score","")).replace("%","").isdigit() and int(str(l.get("Lead Quality Score","0%")).replace("%","")) >= 85)),
+            ]
+        if "indiamart" in source:
+            rows += [
+                ("Web Enquiries",   sum(1 for l in leads if "Web" in str(l.get("Lead Type","")))),
+                ("BuyLeads",        sum(1 for l in leads if "Buy" in str(l.get("Lead Type","")))),
+                ("PNS Calls",       sum(1 for l in leads if "PNS" in str(l.get("Lead Type","")))),
+            ]
+        for ri, (lbl, val) in enumerate(rows, 3):
+            ws2.cell(row=ri, column=1, value=lbl).font = Font(name="Calibri", bold=True, size=10)
+            ws2.cell(row=ri, column=2, value=val).font = Font(name="Calibri", size=10)
+            ws2.cell(row=ri, column=1).fill = PatternFill("solid", fgColor="E8EAF6")
+        ws2.column_dimensions["A"].width = 28
+        ws2.column_dimensions["B"].width = 22
 
         os.makedirs("/home/claude/lead_generation-/exports", exist_ok=True)
         path = f"/home/claude/lead_generation-/exports/leads_{job_id}.xlsx"

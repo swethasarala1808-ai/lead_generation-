@@ -1,80 +1,91 @@
-# 🎯 LeadGen Pro — B2B Lead Generation for Startups & MSMEs
+# 🎯 LeadGen Pro — IndiaMART + Google Places Lead Generator
 
-A quality lead generation tool for India B2B businesses — works like IndiaMART for generating verified contact leads.
+Works exactly like IndiaMART Lead Manager — pull real buyer enquiries + search real businesses.
 
-## Features
-- 🏭 **10+ Industries**: Retail, Medical, Restaurant, IT, Education, Manufacturing, Real Estate, Logistics, Finance, Beauty
-- 📍 **Location-based**: Target any Indian city
-- 🏅 **Business Types**: Filter by MSME Registered, Startup India, SME, Proprietorship
-- 📊 **Excel Export**: Professional .xlsx with 23 fields per lead + Summary sheet
-- 📅 **Daily Schedule**: Set auto-generate time for fresh leads daily
-- 🔍 **Search & Filter**: Real-time search through leads
-- 📱 **WhatsApp Ready**: Flags which leads have WhatsApp
+## Two Data Sources
 
-## Lead Fields Included
-| Field | Description |
-|-------|-------------|
-| Company Name | Business name |
-| Business Type | Retail/Medical/IT etc |
-| Registration Type | MSME / Startup India / SME |
-| Owner Name | Contact person |
-| Mobile Number | Primary phone |
-| Alternate Mobile | Secondary phone |
-| Email ID | Business / personal email |
-| Website | Company URL |
-| Address | Full address |
-| City / State / Pincode | Location details |
-| Annual Turnover | Revenue bracket |
-| No. of Employees | Company size |
-| Year Established | Founded year |
-| GSTIN | Tax registration |
-| WhatsApp Available | WhatsApp contact |
-| Lead Quality Score | AI-rated quality % |
-| Source | Data source platform |
-| Remarks | Business status notes |
+### 🟠 IndiaMART Pull API (Real Buyer Enquiries)
+Pulls actual enquiries sent to YOUR seller account on IndiaMART.
+
+**What you get:**
+- Buyer name, mobile, email, company
+- City, state, pincode
+- Product / requirement they asked for
+- Buyer message
+- Lead type: Web Enquiry, BuyLead, PNS Call
+- Date/time received
+
+**How to get your API key:**
+1. Login at https://seller.indiamart.com
+2. Lead Manager → ⋮ → Import/Export → Pull API
+3. Click "Generate Key"
+4. Requires: **Paid IndiaMART seller account** (Leader or Star plan)
+
+**API Endpoint used:** `https://mapi.indiamart.com/wservce/crm/crmListing/v2/`
+
+---
+
+### 🔵 Google Places API (Real Business Search)
+Finds real registered businesses in any Indian city.
+
+**What you get:**
+- Real business name, phone, address
+- Website URL
+- Google rating + review count
+- Opening hours
+- Direct Google Maps link
+
+**How to get your API key:**
+1. Go to https://console.cloud.google.com
+2. Enable "Places API"
+3. Credentials → Create API Key
+4. $200 free credit/month (~28,500 searches)
+
+---
 
 ## Quick Start
 
-### Option 1: Frontend Only (No Setup Needed)
-Just open `frontend/index.html` in a browser — works standalone!
+### Frontend Only (no backend needed for Google)
+Open `frontend/index.html` in browser.
+- Google tab works directly from browser
+- IndiaMART tab needs the backend running
 
-### Option 2: Full Stack with Backend
+### With Backend (recommended for IndiaMART)
 ```bash
-# Install dependencies
-pip install -r requirements.txt
-
-# Start backend
 cd backend
+pip install -r ../requirements.txt
 python app.py
-
-# Open frontend
-open frontend/index.html
+# Opens at http://localhost:5000
 ```
+Then open `frontend/index.html`
 
-Backend runs on `http://localhost:5000`
+---
 
 ## Project Structure
 ```
 lead_generation/
 ├── frontend/
-│   └── index.html          # Main app (works standalone)
+│   └── index.html              # Main app UI
 ├── backend/
-│   ├── app.py              # Flask API server
-│   ├── lead_engine.py      # Lead generation logic
-│   └── excel_exporter.py   # Professional Excel export
-├── exports/                # Generated Excel files
+│   ├── app.py                  # Flask API server
+│   ├── indiamart_api.py        # IndiaMART Pull API v2 client
+│   ├── google_places_api.py    # Google Places client
+│   └── excel_exporter.py       # Professional Excel export
+├── exports/                    # Generated Excel files
 ├── requirements.txt
 └── README.md
 ```
 
-## Target Users
-- 🚀 Startups looking for B2B customers
-- 🏢 MSMEs wanting to expand their customer base
-- 📈 Sales teams needing verified leads
-- 🤝 Business development professionals
-
-## Industries Covered
-Retail | Medical | Restaurant | IT/Tech | Education | Manufacturing | Real Estate | Logistics | Finance/CA | Beauty/Fitness
+## API Endpoints
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/indiamart/pull` | Pull leads (date range) |
+| POST | `/api/indiamart/history` | Pull historical leads (up to 365 days) |
+| POST | `/api/google/search` | Search businesses by industry + city |
+| GET  | `/api/job/<id>` | Check job status + progress |
+| GET  | `/api/job/<id>/leads` | Get all leads from job |
+| GET  | `/api/job/<id>/export` | Download Excel file |
+| GET  | `/api/health` | Health check |
 
 ---
-Built for India B2B market 🇮🇳
+Built for India B2B Sales Teams 🇮🇳
