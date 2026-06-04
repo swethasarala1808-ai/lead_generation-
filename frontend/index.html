@@ -3,348 +3,386 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LeadGen Pro — IndiaMART + Google Places</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>LeadGen Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --navy:#0F1B2D;--blue:#1967D2;--blue-l:#E8F0FE;--blue-ll:#F0F4FF;
-  --green:#00B050;--green-l:#E6FAF5;--green-d:#047857;
-  --im:#E8450A;--im-l:#FFF0EB;  /* IndiaMART orange */
-  --goog:#1967D2;--goog-l:#E8F0FE;
-  --gold:#F5A623;--purple:#7C3AED;--purple-l:#F5F0FF;
+  --navy:#0A1628;--navy2:#111D35;--navy3:#162440;
+  --blue:#2563EB;--blue-l:#DBEAFE;--blue-ll:#EFF6FF;
+  --green:#059669;--green-l:#D1FAE5;
+  --im:#E8450A;--im-l:#FEF0EC;--im-d:#B83508;
+  --gold:#D97706;--gold-l:#FEF3C7;
   --red:#DC2626;--red-l:#FEE2E2;
-  --text:#1A1F36;--text2:#4A5568;--text3:#718096;
-  --border:#E2E8F0;--bg:#F7F9FC;--card:#fff;
-  --radius:12px;--shadow:0 1px 3px rgba(0,0,0,.08),0 4px 12px rgba(0,0,0,.04);
-  --shadow-lg:0 8px 32px rgba(0,0,0,.12);
+  --purple:#7C3AED;--purple-l:#EDE9FE;
+  --gray:#6B7280;--gray-l:#F9FAFB;--gray-b:#E5E7EB;
+  --text:#111827;--text2:#374151;--text3:#6B7280;
+  --card:#FFFFFF;--bg:#F3F4F6;
+  --radius:10px;
+  --sh:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);
+  --sh-md:0 4px 6px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.06);
+  --sh-lg:0 10px 15px rgba(0,0,0,.1),0 4px 6px rgba(0,0,0,.05);
 }
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px}
 
-/* ── Header ── */
+/* ── HEADER ── */
 header{
-  background:var(--navy);padding:0 2rem;height:60px;display:flex;
-  align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;
-  box-shadow:0 2px 12px rgba(0,0,0,.3);
+  background:var(--navy);height:56px;padding:0 24px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:300;box-shadow:0 1px 0 rgba(255,255,255,.06);
 }
-.logo{display:flex;align-items:center;gap:10px}
-.logo-icon{width:34px;height:34px;background:linear-gradient(135deg,#00C896,#1967D2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px}
-.logo-text{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:19px;color:#fff}
-.logo-text span{color:#00C896}
-.hdr-right{display:flex;align-items:center;gap:8px}
-.src-badge{font-size:11px;font-weight:600;padding:4px 11px;border-radius:20px;cursor:default}
-.src-im{background:rgba(232,69,10,.18);color:#FF7043;border:1px solid rgba(232,69,10,.3)}
-.src-goog{background:rgba(25,103,210,.18);color:#60A5FA;border:1px solid rgba(25,103,210,.3)}
-.src-none{background:rgba(255,255,255,.08);color:#64748B;border:1px solid rgba(255,255,255,.1)}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-mark{
+  width:32px;height:32px;border-radius:8px;
+  background:linear-gradient(135deg,#10B981,#2563EB);
+  display:flex;align-items:center;justify-content:center;font-size:16px;
+}
+.logo-name{font-size:17px;font-weight:700;color:#fff;letter-spacing:-.3px}
+.logo-name span{color:#10B981}
+.hdr-pills{display:flex;align-items:center;gap:8px}
+.hdr-pill{font-size:11px;font-weight:600;padding:4px 11px;border-radius:20px;letter-spacing:.02em}
+.hp-live{background:rgba(16,185,129,.15);color:#34D399;border:1px solid rgba(16,185,129,.25)}
+.hp-neutral{background:rgba(255,255,255,.07);color:#6B7280;border:1px solid rgba(255,255,255,.07);font-size:10px}
 
-/* ── Tabs (mode switcher) ── */
-.mode-bar{
-  background:#162033;border-bottom:1px solid rgba(255,255,255,.06);
-  padding:0 2rem;display:flex;gap:0;
+/* ── TAB BAR ── */
+.tabbar{
+  background:var(--navy2);border-bottom:1px solid rgba(255,255,255,.06);
+  padding:0 24px;display:flex;gap:2px;
 }
-.mode-tab{
-  padding:14px 20px;font-size:13px;font-weight:600;cursor:pointer;
-  color:#64748B;border-bottom:3px solid transparent;transition:all .18s;
-  display:flex;align-items:center;gap:7px;
+.tab{
+  padding:14px 18px;font-size:13px;font-weight:500;color:#6B7280;
+  border-bottom:2px solid transparent;cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;gap:8px;user-select:none;white-space:nowrap;
 }
-.mode-tab:hover{color:#94A3B8}
-.mode-tab.active{color:#fff;border-bottom-color:#00C896}
-.mode-tab .tab-badge{
+.tab:hover{color:#9CA3AF}
+.tab.on{color:#F9FAFB;border-bottom-color:#10B981;font-weight:600}
+.tab .tbadge{
   font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;
-  background:rgba(255,255,255,.1);color:#94A3B8;
+  background:rgba(255,255,255,.08);color:#6B7280;letter-spacing:.02em;
 }
-.mode-tab.active .tab-badge{background:rgba(0,200,150,.2);color:#00C896}
+.tab.on .tbadge{background:rgba(16,185,129,.18);color:#10B981}
+.tdot{width:8px;height:8px;border-radius:50%}
+.tdot-im{background:var(--im)}
+.tdot-g{background:#4285F4}
 
-/* ── Layout ── */
-.container{max-width:1260px;margin:0 auto;padding:1.5rem;display:grid;grid-template-columns:340px 1fr;gap:1.5rem;align-items:start}
-@media(max-width:860px){.container{grid-template-columns:1fr}}
+/* ── LAYOUT ── */
+.wrap{max-width:1320px;margin:0 auto;padding:20px 20px;display:grid;grid-template-columns:340px 1fr;gap:18px;align-items:start}
+@media(max-width:900px){.wrap{grid-template-columns:1fr}}
 
-/* ── Cards ── */
-.card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden}
-.card-hdr{padding:.9rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px}
-.card-hdr h3{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;color:var(--text);flex:1}
-.card-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
-.card-body{padding:1.1rem 1.25rem}
+/* ── SIDEBAR ── */
+.sidebar{display:flex;flex-direction:column;gap:14px}
 
-/* ── Form elements ── */
-label{display:block;font-size:11px;font-weight:700;color:var(--text2);margin-bottom:5px;letter-spacing:.04em;text-transform:uppercase}
-input,select,textarea{
-  width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;
-  font-size:13px;font-family:'DM Sans',sans-serif;color:var(--text);background:var(--card);
-  outline:none;transition:border-color .2s,box-shadow .2s;appearance:none;
+/* ── CARDS ── */
+.card{background:var(--card);border-radius:var(--radius);border:1px solid var(--gray-b);box-shadow:var(--sh)}
+.card-hdr{padding:14px 16px;border-bottom:1px solid var(--gray-b);display:flex;align-items:center;gap:10px}
+.card-hdr h3{font-size:13px;font-weight:700;color:var(--text);flex:1;letter-spacing:-.1px}
+.card-ico{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.card-body{padding:14px 16px}
+
+/* ── FORM ── */
+.flabel{font-size:11px;font-weight:600;color:var(--text3);margin-bottom:5px;display:block;letter-spacing:.04em;text-transform:uppercase}
+.finput{
+  width:100%;padding:9px 12px;border:1.5px solid var(--gray-b);border-radius:8px;
+  font-size:13px;font-family:'Inter',sans-serif;color:var(--text);background:#fff;
+  outline:none;transition:border .15s,box-shadow .15s;
 }
-input[type=password]{letter-spacing:.12em}
-input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(25,103,210,.1)}
-.form-row{margin-bottom:.9rem}
+.finput:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.finput.mono{font-family:monospace;font-size:12px;letter-spacing:.05em}
+.frow{margin-bottom:12px}
+.frow2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.fdiv{height:1px;background:var(--gray-b);margin:12px 0}
 
-/* ── Industry chips ── */
-.industry-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.chip{
-  padding:9px 10px;border-radius:8px;border:1.5px solid var(--border);background:var(--bg);
-  cursor:pointer;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;
-  color:var(--text2);transition:all .16s;user-select:none;
+/* ── ALERT BOX ── */
+.abox{border-radius:8px;padding:11px 13px;font-size:12px;line-height:1.65;margin-bottom:12px}
+.abox-im{background:var(--im-l);border:1px solid rgba(232,69,10,.2);color:#92400E}
+.abox-g{background:var(--blue-ll);border:1px solid rgba(37,99,235,.2);color:#1E40AF}
+.abox b{display:block;font-size:12.5px;font-weight:700;margin-bottom:4px}
+.abox a{color:var(--blue);font-weight:600;text-decoration:none}
+.abox a:hover{text-decoration:underline}
+
+/* ── STEPS ── */
+.steps{list-style:none;padding:0;counter-reset:sc}
+.steps li{
+  counter-increment:sc;display:flex;gap:9px;font-size:12px;color:var(--text2);
+  margin-bottom:8px;align-items:flex-start;line-height:1.5;
 }
-.chip:hover{border-color:var(--blue);background:var(--blue-ll);color:var(--blue)}
-.chip.active{border-color:var(--blue);background:var(--blue-l);color:var(--blue);font-weight:600}
-.chip .ci{font-size:15px}
-
-/* Pills */
-.pills{display:flex;gap:7px;flex-wrap:wrap}
-.pill{
-  padding:5px 12px;border-radius:20px;border:1.5px solid var(--border);font-size:12px;
-  font-weight:600;cursor:pointer;transition:all .16s;color:var(--text2);background:var(--bg);
+.steps li::before{
+  content:counter(sc);min-width:20px;height:20px;border-radius:50%;
+  background:var(--blue);color:#fff;font-size:10px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;
 }
-.pill:hover{border-color:var(--purple);color:var(--purple)}
-.pill.active{background:var(--purple-l);border-color:var(--purple);color:var(--purple)}
+.steps li a{color:var(--blue);font-weight:600}
 
-/* Slider */
-input[type=range]{height:4px;background:var(--border);border-radius:2px;outline:none;appearance:none;cursor:pointer}
-input[type=range]::-webkit-slider-thumb{appearance:none;width:17px;height:17px;border-radius:50%;background:var(--blue);cursor:pointer;box-shadow:0 0 0 4px rgba(25,103,210,.15)}
-.slider-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-top:4px}
-.slider-val{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;color:var(--blue);text-align:center;margin-bottom:5px}
-
-/* Buttons */
-.btn-primary{
-  width:100%;padding:13px;background:linear-gradient(135deg,var(--blue) 0%,#1251A3 100%);
-  color:#fff;border:none;border-radius:var(--radius);font-family:'Space Grotesk',sans-serif;
-  font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;
-  justify-content:center;gap:8px;transition:all .2s;margin-top:.5rem;
+/* ── INDUSTRY GRID ── */
+.ind-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.ind-chip{
+  padding:10px 10px;border-radius:8px;border:1.5px solid var(--gray-b);background:var(--gray-l);
+  cursor:pointer;display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:500;
+  color:var(--text2);transition:all .14s;user-select:none;
 }
-.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(25,103,210,.35)}
-.btn-primary:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none}
-.btn-primary.im{background:linear-gradient(135deg,var(--im) 0%,#c1390a 100%)}
-.btn-primary.im:hover{box-shadow:0 8px 24px rgba(232,69,10,.35)}
+.ind-chip:hover{border-color:var(--blue);background:var(--blue-ll);color:var(--blue)}
+.ind-chip.on{border-color:var(--blue);background:var(--blue-l);color:var(--blue);font-weight:600}
+.ind-chip .ico{font-size:17px;flex-shrink:0}
 
-.btn{
-  padding:8px 15px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;
-  display:inline-flex;align-items:center;gap:6px;transition:all .16s;border:none;
-  font-family:'DM Sans',sans-serif;
+/* ── SLIDER ── */
+.slider-num{font-size:26px;font-weight:800;color:var(--blue);text-align:center;margin-bottom:5px;letter-spacing:-1px}
+input[type=range]{width:100%;height:4px;background:var(--gray-b);border-radius:2px;outline:none;appearance:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{appearance:none;width:16px;height:16px;border-radius:50%;background:var(--blue);cursor:pointer;box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+.slider-marks{display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-top:4px}
+
+/* ── BUTTONS ── */
+.btn-main{
+  width:100%;padding:12px;border:none;border-radius:var(--radius);
+  font-family:'Inter',sans-serif;font-size:13.5px;font-weight:700;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  gap:8px;transition:all .18s;margin-top:4px;letter-spacing:-.1px;
 }
-.btn-outline{background:var(--card);border:1.5px solid var(--border);color:var(--text2)}
-.btn-outline:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-l)}
-.btn-green{background:var(--green);color:#fff}
-.btn-green:hover{background:var(--green-d);box-shadow:0 4px 12px rgba(0,176,80,.3)}
+.btn-main:disabled{opacity:.55;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+.btn-im{background:var(--im);color:#fff}
+.btn-im:hover:not(:disabled){background:var(--im-d);box-shadow:0 6px 20px rgba(232,69,10,.35);transform:translateY(-1px)}
+.btn-blue{background:var(--blue);color:#fff}
+.btn-blue:hover:not(:disabled){background:#1D4ED8;box-shadow:0 6px 20px rgba(37,99,235,.35);transform:translateY(-1px)}
 
-/* Progress */
-.prog-wrap{margin:.8rem 0;display:none}
-.prog-bg{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
-.prog-fill{height:100%;background:linear-gradient(90deg,#00C896,#1967D2);border-radius:3px;transition:width .35s ease}
-.prog-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-top:5px}
+.btn-sm{
+  padding:7px 13px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;
+  display:inline-flex;align-items:center;gap:5px;transition:all .14s;border:none;
+  font-family:'Inter',sans-serif;
+}
+.btn-out{background:#fff;border:1.5px solid var(--gray-b);color:var(--text2)}
+.btn-out:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-ll)}
+.btn-grn{background:var(--green);color:#fff}
+.btn-grn:hover{background:#047857;box-shadow:0 4px 12px rgba(5,150,105,.3)}
+.btn-ghost{background:transparent;border:1.5px solid var(--gray-b);color:var(--text3)}
+.btn-ghost:hover{border-color:var(--blue);color:var(--blue)}
 
-/* Stats */
-.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:1.2rem}
-.stat-card{background:var(--card);border-radius:10px;border:1px solid var(--border);padding:13px 14px}
-.stat-card .sv{font-family:'Space Grotesk',sans-serif;font-size:23px;font-weight:700;color:var(--text)}
-.stat-card .sl{font-size:11px;color:var(--text3);margin-top:2px}
-.stat-card .si{font-size:17px;margin-bottom:5px}
+/* ── PROGRESS ── */
+.prog{display:none;margin:10px 0}
+.prog-bar{height:5px;background:var(--gray-b);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;width:0%;background:linear-gradient(90deg,#10B981,#2563EB);border-radius:3px;transition:width .3s ease}
+.prog-info{display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-top:5px}
 
-/* Table */
-.tbl-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)}
+/* ── STATS ── */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.scard{background:var(--card);border-radius:var(--radius);border:1px solid var(--gray-b);padding:14px 16px;box-shadow:var(--sh)}
+.scard .sv{font-size:26px;font-weight:800;color:var(--text);letter-spacing:-1px;line-height:1}
+.scard .sl{font-size:11px;color:var(--text3);margin-top:3px;font-weight:500}
+.scard .si{font-size:20px;margin-bottom:7px}
+
+/* ── RESULTS CARD ── */
+.res-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--gray-b);box-shadow:var(--sh)}
+.res-hdr{padding:12px 16px;border-bottom:1px solid var(--gray-b);display:flex;align-items:center;gap:10px}
+.res-hdr h3{font-size:13px;font-weight:700;flex:1}
+.res-cnt{font-size:11px;color:var(--text3);font-weight:500}
+.res-body{padding:12px}
+
+/* ── TOOLBAR ── */
+.toolbar{display:flex;align-items:center;gap:9px;margin-bottom:12px;flex-wrap:wrap}
+.search-box{position:relative;flex:1;min-width:200px}
+.search-box input{padding-left:33px;font-size:13px}
+.search-box .si{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:14px;pointer-events:none}
+.tb-btns{display:flex;gap:7px}
+
+/* ── TABLE ── */
+.tbl-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--gray-b)}
 table{width:100%;border-collapse:collapse;font-size:12.5px}
 thead th{
   background:var(--navy);color:#94A3B8;font-size:10px;font-weight:600;
-  letter-spacing:.06em;text-transform:uppercase;padding:10px 12px;text-align:left;white-space:nowrap;
+  letter-spacing:.07em;text-transform:uppercase;padding:10px 12px;
+  text-align:left;white-space:nowrap;position:sticky;top:0;
 }
-tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
-tbody tr:hover{background:var(--blue-ll)}
+tbody tr{border-bottom:1px solid #F3F4F6;transition:background .1s}
+tbody tr:nth-child(even){background:#FAFAFA}
+tbody tr:hover{background:var(--blue-ll)!important}
 tbody tr:last-child{border-bottom:none}
-tbody td{padding:9px 12px;color:var(--text);white-space:nowrap;max-width:200px;overflow:hidden;text-overflow:ellipsis}
+tbody td{padding:10px 12px;color:var(--text);white-space:nowrap;max-width:220px;overflow:hidden;text-overflow:ellipsis}
 
-/* Badges */
-.badge{display:inline-flex;align-items:center;padding:3px 7px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap}
-.b-im{background:var(--im-l);color:var(--im)}
-.b-goog{background:var(--blue-l);color:var(--blue)}
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+.b-web{background:#DCFCE7;color:#166534}
+.b-buy{background:var(--im-l);color:var(--im)}
+.b-pns{background:var(--purple-l);color:var(--purple)}
 .b-msme{background:var(--purple-l);color:var(--purple)}
-.b-startup{background:#FFF0EB;color:#E04F24}
+.b-startup{background:var(--im-l);color:var(--im-d)}
 .b-sme{background:var(--blue-l);color:var(--blue)}
-.b-prop{background:#FFF8E1;color:#F59E0B}
+.b-prop{background:var(--gold-l);color:var(--gold)}
+.b-live-g{background:var(--blue-l);color:var(--blue)}
+.b-live-i{background:var(--im-l);color:var(--im)}
 
-.score{padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700}
-.s-hi{background:#DCFCE7;color:#16A34A}
-.s-mid{background:#FEF9C3;color:#CA8A04}
-.s-lo{background:#FEE2E2;color:#DC2626}
+.score{padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+.sc-hi{background:#DCFCE7;color:#166534}
+.sc-md{background:#FEF9C3;color:#92400E}
+.sc-lo{background:var(--red-l);color:var(--red)}
 
-/* Export bar */
-.export-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:9px}
-.search-wrap{position:relative;flex:1;min-width:190px}
-.search-wrap input{padding-left:33px}
-.search-wrap .si{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:14px}
+/* ── EMPTY ── */
+.empty{text-align:center;padding:52px 20px}
+.empty-ico{font-size:44px;opacity:.18;display:block;margin-bottom:14px}
+.empty h4{font-size:15px;font-weight:700;color:var(--text2);margin-bottom:6px}
+.empty p{font-size:12.5px;color:var(--text3);line-height:1.6;max-width:340px;margin:0 auto}
+.empty code{background:#F3F4F6;border:1px solid var(--gray-b);border-radius:5px;padding:3px 8px;font-size:11.5px;display:inline-block;margin-top:6px;color:var(--text2)}
 
-/* Empty state */
-.empty{text-align:center;padding:4rem 2rem}
-.empty .ei{font-size:2.8rem;opacity:.25;margin-bottom:1rem}
-.empty h4{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;color:var(--text2);margin-bottom:5px}
-.empty p{font-size:12.5px;color:var(--text3)}
+/* ── TOAST ── */
+.toasts{position:fixed;bottom:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{
+  background:var(--navy);color:#F9FAFB;padding:11px 16px;border-radius:9px;font-size:13px;font-weight:500;
+  box-shadow:var(--sh-lg);display:flex;align-items:center;gap:9px;min-width:240px;
+  animation:tin .25s ease;border-left:3px solid #10B981;
+}
+@keyframes tin{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:translateX(0)}}
+.toast.err{border-left-color:var(--red)}
 
-/* Toast */
-.toast-wrap{position:fixed;bottom:22px;right:22px;z-index:999;display:flex;flex-direction:column;gap:7px}
-.toast{background:var(--navy);color:#fff;padding:11px 17px;border-radius:9px;font-size:13px;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:8px;animation:si .3s ease}
-@keyframes si{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:translateX(0)}}
+/* ── SPINNER ── */
+.dots span{display:inline-block;width:5px;height:5px;border-radius:50%;background:#fff;animation:db 1.2s infinite;margin:0 1.5px}
+.dots span:nth-child(2){animation-delay:.18s}.dots span:nth-child(3){animation-delay:.36s}
+@keyframes db{0%,80%,100%{transform:scale(.65);opacity:.35}40%{transform:scale(1);opacity:1}}
 
-/* Dots loader */
-.dots span{display:inline-block;width:5px;height:5px;border-radius:50%;background:#00C896;animation:db 1.2s infinite;margin:0 2px}
-.dots span:nth-child(2){animation-delay:.2s}
-.dots span:nth-child(3){animation-delay:.4s}
-@keyframes db{0%,80%,100%{transform:scale(.7);opacity:.4}40%{transform:scale(1);opacity:1}}
-
-.divider{height:1px;background:var(--border);margin:.75rem 0}
-
-/* info box */
-.info-box{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:11px 13px;font-size:12px;color:#1E40AF;line-height:1.65;margin-bottom:.85rem}
-.info-box b{display:block;margin-bottom:4px;font-size:13px}
-.info-box a{color:#1967D2;font-weight:600}
-.info-box.im{background:#FFF5F2;border-color:#FCCDB9;color:#92400E}
-.info-box.im b{color:var(--im)}
-
-/* step list */
-.steps{counter-reset:s;list-style:none;padding:0}
-.steps li{counter-increment:s;display:flex;gap:10px;font-size:12.5px;color:var(--text2);margin-bottom:8px;align-items:flex-start}
-.steps li::before{content:counter(s);min-width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
-
-/* Date range picker */
-.date-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+/* panels */
+.panel{display:none}.panel.on{display:block}
 
 /* section label */
-.section-title{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin:.9rem 0 .5rem}
+.slabel{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin:12px 0 8px}
 
-/* panel hidden */
-.panel{display:none}
-.panel.active{display:block}
-
-/* INDIAMART lead type colour */
-.lt-web{color:#047857;font-weight:600}
-.lt-buy{color:var(--im);font-weight:600}
-.lt-pns{color:var(--purple);font-weight:600}
+/* whatsapp btn */
+.wa-btn{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;background:#DCFCE7;color:#166534;text-decoration:none}
+.maps-btn{color:var(--blue);font-size:12px;text-decoration:none;font-weight:500}
+.maps-btn:hover{text-decoration:underline}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">
-    <div class="logo-icon">🎯</div>
-    <div class="logo-text">Lead<span>Gen</span> Pro</div>
-  </div>
-  <div class="hdr-right">
-    <div id="srcBadge" class="src-badge src-none">No Source Connected</div>
-    <div style="font-size:11px;color:#475569;padding:4px 10px;border-radius:20px;border:1px solid rgba(255,255,255,.08);">🇮🇳 India B2B</div>
+  <a class="logo" href="#">
+    <div class="logo-mark">🎯</div>
+    <div class="logo-name">Lead<span>Gen</span> Pro</div>
+  </a>
+  <div class="hdr-pills">
+    <div class="hdr-pill hp-live" id="livePill" style="display:none">🟢 Live Data</div>
+    <div class="hdr-pill hp-neutral">🇮🇳 India B2B</div>
   </div>
 </header>
 
-<!-- Mode Tabs -->
-<div class="mode-bar">
-  <div class="mode-tab active" onclick="switchMode('indiamart')" id="tab-indiamart">
-    🟠 IndiaMART Pull API <span class="tab-badge">Real Buyer Enquiries</span>
+<div class="tabbar">
+  <div class="tab on" id="tab-im" onclick="switchTab('im')">
+    <span class="tdot tdot-im"></span>IndiaMART Pull API
+    <span class="tbadge">Real Buyer Enquiries</span>
   </div>
-  <div class="mode-tab" onclick="switchMode('google')" id="tab-google">
-    🔵 Google Places <span class="tab-badge">Real Business Search</span>
+  <div class="tab" id="tab-g" onclick="switchTab('g')">
+    <span class="tdot tdot-g"></span>Google Places
+    <span class="tbadge">Real Business Search</span>
   </div>
 </div>
 
-<div class="container">
+<div class="wrap">
 
-  <!-- LEFT PANEL -->
-  <div>
+  <!-- ══ SIDEBAR ══ -->
+  <div class="sidebar">
 
-    <!-- ═══ INDIAMART PANEL ═══ -->
-    <div id="panel-indiamart" class="panel active">
-
-      <div class="card" style="margin-bottom:1rem">
+    <!-- IndiaMART Panel -->
+    <div id="panel-im" class="panel on">
+      <div class="card">
         <div class="card-hdr">
-          <div class="card-icon" style="background:var(--im-l)">🟠</div>
+          <div class="card-ico" style="background:var(--im-l);font-size:16px">🟠</div>
           <h3>IndiaMART Pull API</h3>
         </div>
         <div class="card-body">
-          <div class="info-box im">
+
+          <div class="abox abox-im">
             <b>What IndiaMART API gives you:</b>
-            Real buyer enquiries sent to YOUR seller account —
-            buyer name, mobile, email, company, city, product requirement, message.
-            Requires a <strong>paid IndiaMART seller account</strong>.
+            Real buyer enquiries sent to YOUR seller listing —
+            buyer name, mobile, email, company, city, product requirement &amp; message.
+            Needs a <strong>paid seller account</strong> (Leader / Star plan).
           </div>
 
-          <div class="form-row">
-            <label>Your IndiaMART Pull API Key</label>
-            <input type="password" id="imKey" placeholder="Paste key from seller.indiamart.com/leadmanager/crmapi">
+          <div class="frow">
+            <label class="flabel">Your IndiaMART Pull API Key</label>
+            <input class="finput mono" type="password" id="imKey" placeholder="Paste key from Lead Manager → Pull API">
           </div>
 
-          <ul class="steps" style="margin-bottom:.9rem">
-            <li>Login at <a href="https://seller.indiamart.com" target="_blank" style="color:var(--im)">seller.indiamart.com</a></li>
-            <li>Go to Lead Manager → ⋮ → Import/Export → Pull API</li>
-            <li>Click "Generate Key" and paste it above</li>
+          <div class="slabel">How to get your key:</div>
+          <ul class="steps">
+            <li>Login at <a href="https://seller.indiamart.com" target="_blank">seller.indiamart.com</a></li>
+            <li>Go to <strong>Lead Manager → ⋮ → Import/Export Leads → Pull API</strong></li>
+            <li>Click <strong>"Generate Key"</strong> → copy and paste above</li>
           </ul>
 
-          <div class="divider"></div>
-          <div class="section-title">Date Range (max 7 days per pull)</div>
-          <div class="date-row form-row">
+          <div class="fdiv"></div>
+          <div class="slabel">Date Range (max 7 days per pull)</div>
+          <div class="frow2">
             <div>
-              <label>From</label>
-              <input type="datetime-local" id="imStart">
+              <label class="flabel">From</label>
+              <input class="finput" type="datetime-local" id="imFrom">
             </div>
             <div>
-              <label>To</label>
-              <input type="datetime-local" id="imEnd">
+              <label class="flabel">To</label>
+              <input class="finput" type="datetime-local" id="imTo">
             </div>
           </div>
 
-          <div class="prog-wrap" id="prog-im">
-            <div class="prog-bg"><div class="prog-fill" id="pf-im" style="width:0%"></div></div>
-            <div class="prog-labels"><span id="pt-im">Connecting to IndiaMART...</span><span id="pp-im">0%</span></div>
+          <div class="prog" id="prog-im">
+            <div class="prog-bar"><div class="prog-fill" id="pf-im"></div></div>
+            <div class="prog-info"><span id="pt-im">Connecting to IndiaMART...</span><span id="pp-im">0%</span></div>
           </div>
-          <button class="btn-primary im" id="btn-im" onclick="pullIndiaMART()">
-            🟠 Pull My IndiaMART Leads
+          <button class="btn-main btn-im" id="btn-im" onclick="pullIM()">
+            🟠 Pull My Leads from IndiaMART
           </button>
 
-          <div class="divider"></div>
-          <div class="section-title">Historical Pull</div>
-          <div class="form-row" style="display:flex;gap:8px;align-items:flex-end">
+          <div class="fdiv"></div>
+          <div class="slabel">Historical Pull (batch)</div>
+          <div style="display:flex;gap:8px;align-items:flex-end">
             <div style="flex:1">
-              <label>Fetch Last N Days (max 365)</label>
-              <input type="number" id="imDays" value="30" min="1" max="365">
+              <label class="flabel">Last N Days (max 365)</label>
+              <input class="finput" type="number" id="imDays" value="30" min="1" max="365" style="text-align:center;font-weight:700;font-size:15px">
             </div>
-            <button class="btn btn-outline" onclick="pullHistory()" style="margin-bottom:1px">📅 Pull History</button>
+            <button class="btn-sm btn-ghost" onclick="pullIMHistory()" style="margin-bottom:1px;padding:9px 13px">📅 History</button>
           </div>
+
         </div>
       </div>
+    </div>
 
-    </div><!-- /indiamart panel -->
-
-    <!-- ═══ GOOGLE PANEL ═══ -->
-    <div id="panel-google" class="panel">
-
-      <div class="card" style="margin-bottom:1rem">
+    <!-- Google Panel -->
+    <div id="panel-g" class="panel">
+      <div class="card">
         <div class="card-hdr">
-          <div class="card-icon" style="background:var(--blue-l)">🔵</div>
+          <div class="card-ico" style="background:var(--blue-ll)">🔵</div>
           <h3>Google Places Search</h3>
         </div>
         <div class="card-body">
-          <div class="info-box">
+
+          <div class="abox abox-g">
             <b>What Google Places gives you:</b>
-            Real registered businesses — actual name, phone, address, website, rating.
+            Real registered businesses — actual name, phone, address, website &amp; rating.
             <a href="https://console.cloud.google.com/apis/library/places-backend.googleapis.com" target="_blank">Enable Places API →</a>
-            ($200 free credit/month ≈ 28,500 calls)
-          </div>
-          <div class="form-row">
-            <label>Google Places API Key</label>
-            <input type="password" id="gKey" placeholder="AIza...">
-          </div>
-          <div class="divider"></div>
-          <div class="section-title">Industry</div>
-          <div class="industry-grid" style="margin-bottom:.9rem" id="industryGrid">
-            <div class="chip active" data-val="retail"        data-q="retail shop|grocery store|supermarket|general store|clothing store" onclick="selIndustry(this)"><span class="ci">🛍️</span>Retail</div>
-            <div class="chip"        data-val="medical"       data-q="clinic|hospital|pharmacy|diagnostic centre|nursing home"            onclick="selIndustry(this)"><span class="ci">🏥</span>Medical</div>
-            <div class="chip"        data-val="restaurant"    data-q="restaurant|cafe|dhaba|catering|cloud kitchen"                       onclick="selIndustry(this)"><span class="ci">🍽️</span>Restaurant</div>
-            <div class="chip"        data-val="it"            data-q="software company|IT company|digital agency|web development"         onclick="selIndustry(this)"><span class="ci">💻</span>IT / Tech</div>
-            <div class="chip"        data-val="education"     data-q="coaching centre|training institute|school|college"                  onclick="selIndustry(this)"><span class="ci">🎓</span>Education</div>
-            <div class="chip"        data-val="manufacturing" data-q="manufacturer|factory|fabrication|industries"                        onclick="selIndustry(this)"><span class="ci">⚙️</span>Manufacturing</div>
-            <div class="chip"        data-val="real_estate"   data-q="real estate|property dealer|builder|construction"                   onclick="selIndustry(this)"><span class="ci">🏗️</span>Real Estate</div>
-            <div class="chip"        data-val="logistics"     data-q="logistics|courier|transport|cargo"                                  onclick="selIndustry(this)"><span class="ci">🚚</span>Logistics</div>
-            <div class="chip"        data-val="finance"       data-q="CA firm|chartered accountant|tax consultant|insurance agent"        onclick="selIndustry(this)"><span class="ci">💰</span>Finance/CA</div>
-            <div class="chip"        data-val="beauty"        data-q="salon|spa|beauty parlour|gym|fitness centre"                        onclick="selIndustry(this)"><span class="ci">💅</span>Beauty/Fitness</div>
+            ($200 free/month ≈ 28,500 searches)
           </div>
 
-          <div class="form-row">
-            <label>Target City</label>
-            <select id="citySelect" onchange="cityChanged()">
+          <div class="frow">
+            <label class="flabel">Google Places API Key</label>
+            <input class="finput mono" type="password" id="gKey" placeholder="AIzaSy...">
+            <div style="margin-top:5px;font-size:11px;color:var(--text3)">
+              Get free key: <a href="https://console.cloud.google.com" target="_blank" style="color:var(--blue);font-weight:600">console.cloud.google.com</a> → Enable Places API → Credentials
+            </div>
+          </div>
+
+          <div class="fdiv"></div>
+          <div class="slabel">Industry</div>
+          <div class="ind-grid" id="indGrid">
+            <div class="ind-chip on" data-v="retail"        data-q="retail shop|grocery store|supermarket|clothing store|general store" onclick="selInd(this)"><span class="ico">🛍️</span>Retail</div>
+            <div class="ind-chip"    data-v="medical"       data-q="clinic|hospital|pharmacy|diagnostic centre|doctor"                  onclick="selInd(this)"><span class="ico">🏥</span>Medical</div>
+            <div class="ind-chip"    data-v="restaurant"    data-q="restaurant|cafe|dhaba|catering|cloud kitchen|hotel"                 onclick="selInd(this)"><span class="ico">🍽️</span>Restaurant</div>
+            <div class="ind-chip"    data-v="it"            data-q="software company|IT company|digital agency|web development"         onclick="selInd(this)"><span class="ico">💻</span>IT / Tech</div>
+            <div class="ind-chip"    data-v="education"     data-q="coaching centre|training institute|school|college|tuition"          onclick="selInd(this)"><span class="ico">🎓</span>Education</div>
+            <div class="ind-chip"    data-v="manufacturing" data-q="manufacturer|factory|fabrication|industries|production"             onclick="selInd(this)"><span class="ico">⚙️</span>Manufacturing</div>
+            <div class="ind-chip"    data-v="real_estate"   data-q="real estate|property dealer|builder|construction company"           onclick="selInd(this)"><span class="ico">🏗️</span>Real Estate</div>
+            <div class="ind-chip"    data-v="logistics"     data-q="logistics|courier service|transport|cargo|packers movers"           onclick="selInd(this)"><span class="ico">🚚</span>Logistics</div>
+            <div class="ind-chip"    data-v="finance"       data-q="CA firm|chartered accountant|tax consultant|insurance agent"        onclick="selInd(this)"><span class="ico">💰</span>Finance / CA</div>
+            <div class="ind-chip"    data-v="beauty"        data-q="salon|spa|beauty parlour|gym|fitness centre|wellness"               onclick="selInd(this)"><span class="ico">💅</span>Beauty / Fitness</div>
+          </div>
+
+          <div class="fdiv"></div>
+          <div class="frow">
+            <label class="flabel">Target City</label>
+            <select class="finput" id="cityDrop" onchange="cityChange()">
               <option value="bangalore">Bangalore</option>
               <option value="mumbai">Mumbai</option>
               <option value="delhi">Delhi</option>
@@ -362,593 +400,623 @@ tbody td{padding:9px 12px;color:var(--text);white-space:nowrap;max-width:200px;o
               <option value="indore">Indore</option>
               <option value="nagpur">Nagpur</option>
               <option value="visakhapatnam">Visakhapatnam</option>
-              <option value="custom">Custom City...</option>
+              <option value="bhopal">Bhopal</option>
+              <option value="patna">Patna</option>
+              <option value="agra">Agra</option>
+              <option value="custom">✏️ Custom City...</option>
             </select>
           </div>
-          <div class="form-row" id="customCityRow" style="display:none">
-            <label>Enter City Name</label>
-            <input type="text" id="customCity" placeholder="e.g. Mysore, Madurai...">
+          <div class="frow" id="customRow" style="display:none">
+            <label class="flabel">Type City Name</label>
+            <input class="finput" type="text" id="customCity" placeholder="e.g. Mysore, Madurai, Vadodara...">
           </div>
 
-          <div class="form-row">
-            <label>Number of Leads</label>
-            <div class="slider-val" id="countDisplay">20</div>
-            <input type="range" id="countSlider" min="5" max="50" value="20" step="5"
-              oninput="document.getElementById('countDisplay').textContent=this.value">
-            <div class="slider-labels"><span>5</span><span>25</span><span>50</span></div>
+          <div class="frow">
+            <label class="flabel">Number of Leads to Fetch</label>
+            <div class="slider-num" id="sliderNum">20</div>
+            <input type="range" id="slider" min="5" max="50" value="20" step="5"
+              oninput="document.getElementById('sliderNum').textContent=this.value">
+            <div class="slider-marks"><span>5</span><span>20</span><span>35</span><span>50</span></div>
           </div>
 
-          <div class="prog-wrap" id="prog-g">
-            <div class="prog-bg"><div class="prog-fill" id="pf-g" style="width:0%"></div></div>
-            <div class="prog-labels"><span id="pt-g">Searching Google Places...</span><span id="pp-g">0%</span></div>
+          <div class="prog" id="prog-g">
+            <div class="prog-bar"><div class="prog-fill" id="pf-g"></div></div>
+            <div class="prog-info"><span id="pt-g">Searching Google Places...</span><span id="pp-g">0%</span></div>
           </div>
-          <button class="btn-primary" id="btn-g" onclick="searchGoogle()">
-            🔵 Search Real Businesses
+          <button class="btn-main btn-blue" id="btn-g" onclick="searchGoogle()">
+            🔵 Search Real Businesses Now
           </button>
+
         </div>
       </div>
+    </div>
 
-    </div><!-- /google panel -->
+  </div><!-- /sidebar -->
 
-  </div><!-- /LEFT -->
-
-  <!-- RIGHT: Results -->
+  <!-- ══ RIGHT ══ -->
   <div>
-    <div class="stats-row" id="statsRow" style="display:none">
-      <div class="stat-card"><div class="si" id="s0i">📊</div><div class="sv" id="s0">0</div><div class="sl" id="s0l">Total Leads</div></div>
-      <div class="stat-card"><div class="si" id="s1i">📞</div><div class="sv" id="s1">0</div><div class="sl" id="s1l">With Phone</div></div>
-      <div class="stat-card"><div class="si" id="s2i">📧</div><div class="sv" id="s2">0</div><div class="sl" id="s2l">With Email</div></div>
-      <div class="stat-card"><div class="si" id="s3i">⭐</div><div class="sv" id="s3">—</div><div class="sl" id="s3l">Avg Rating</div></div>
+
+    <!-- Stats -->
+    <div class="stats-grid" id="statsGrid" style="display:none">
+      <div class="scard"><div class="si">📊</div><div class="sv" id="st0">0</div><div class="sl" id="sl0">Total Leads</div></div>
+      <div class="scard"><div class="si">📞</div><div class="sv" id="st1">0</div><div class="sl" id="sl1">With Phone</div></div>
+      <div class="scard"><div class="si">📧</div><div class="sv" id="st2">0</div><div class="sl" id="sl2">With Email</div></div>
+      <div class="scard"><div class="si" id="si3">⭐</div><div class="sv" id="st3">—</div><div class="sl" id="sl3">Avg Rating</div></div>
     </div>
 
-    <div class="card">
-      <div class="card-hdr">
-        <div class="card-icon" style="background:var(--green-l)">📋</div>
+    <!-- Results -->
+    <div class="res-card">
+      <div class="res-hdr">
+        <span style="font-size:18px">📋</span>
         <h3>Lead Results</h3>
-        <div id="resultCount" style="font-size:11px;color:var(--text3)"></div>
+        <span class="res-cnt" id="resCnt"></span>
       </div>
-      <div class="card-body" style="padding:.9rem">
-        <div class="export-bar" id="exportBar" style="display:none">
-          <div class="search-wrap">
+      <div class="res-body">
+
+        <!-- Toolbar -->
+        <div class="toolbar" id="toolbar" style="display:none">
+          <div class="search-box">
             <span class="si">🔍</span>
-            <input type="text" id="searchInput" placeholder="Search leads..." oninput="filterLeads()">
+            <input class="finput" type="text" id="searchIn" placeholder="Search leads..." oninput="doSearch()">
           </div>
-          <div style="display:flex;gap:7px">
-            <button class="btn btn-outline" onclick="exportCSV()">📥 CSV</button>
-            <button class="btn btn-green" onclick="exportExcel()">📊 Excel</button>
+          <div class="tb-btns">
+            <button class="btn-sm btn-out" onclick="doCSV()">📥 CSV</button>
+            <button class="btn-sm btn-grn" onclick="doExcel()">📊 Excel</button>
           </div>
         </div>
-        <div id="tblContainer">
+
+        <!-- Table -->
+        <div id="tblArea">
           <div class="empty">
-            <div class="ei">🎯</div>
+            <span class="empty-ico">🎯</span>
             <h4>No leads yet</h4>
-            <p>Connect IndiaMART or Google Places and click Generate</p>
+            <p>Choose a source on the left and click Generate.<br>
+              Google Places works directly in the browser.<br>
+              IndiaMART needs the backend running.</p>
           </div>
         </div>
+
       </div>
     </div>
+
   </div>
 
-</div><!-- /container -->
-<div class="toast-wrap" id="toastWrap"></div>
+</div><!-- /wrap -->
+
+<div class="toasts" id="toasts"></div>
 
 <script>
-// ─────────────────────────────────────────────────────────────
-//  STATE
-// ─────────────────────────────────────────────────────────────
-const API = 'http://localhost:5000/api';
-let mode        = 'indiamart';   // 'indiamart' | 'google'
-let currentInd  = 'retail';
-let currentCity = 'bangalore';
-let allLeads    = [];
-let filtered    = [];
-let pollTimer   = null;
-let genTimer    = null;
+// ═══════════════════════════════════════════════════
+//  CONSTANTS
+// ═══════════════════════════════════════════════════
+const BACKEND = 'http://localhost:5000/api';
 
-// ─────────────────────────────────────────────────────────────
-//  MODE SWITCH
-// ─────────────────────────────────────────────────────────────
-function switchMode(m) {
-  mode = m;
-  document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.getElementById('tab-'  + m).classList.add('active');
-  document.getElementById('panel-'+ m).classList.add('active');
-}
-
-// ─────────────────────────────────────────────────────────────
-//  INDIAMART
-// ─────────────────────────────────────────────────────────────
-async function pullIndiaMART() {
-  const key = document.getElementById('imKey').value.trim();
-  if (!key) { toast('⚠ Paste your IndiaMART Pull API key first'); return; }
-
-  const start = fmtDateTime(document.getElementById('imStart').value);
-  const end   = fmtDateTime(document.getElementById('imEnd').value);
-
-  resetResults();
-  setBusy('btn-im', true);
-  showProg('prog-im');
-  setProg('im', 10, 'Connecting to IndiaMART API...');
-  updateSrcBadge('indiamart');
-
-  try {
-    const r = await fetch(`${API}/indiamart/pull`, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ api_key:key, start, end })
-    });
-    const d = await r.json();
-    if (d.error) { toast('❌ '+d.error); setBusy('btn-im',false); return; }
-    pollJob(d.job_id, 'im');
-  } catch(e) {
-    toast('❌ Backend not running. Start: cd backend && python app.py');
-    setBusy('btn-im', false);
-    showFallbackMsg();
-  }
-}
-
-async function pullHistory() {
-  const key  = document.getElementById('imKey').value.trim();
-  const days = parseInt(document.getElementById('imDays').value)||30;
-  if (!key) { toast('⚠ Paste your IndiaMART Pull API key first'); return; }
-
-  resetResults();
-  setBusy('btn-im', true);
-  showProg('prog-im');
-  setProg('im', 5, `Fetching last ${days} days from IndiaMART...`);
-  updateSrcBadge('indiamart');
-
-  try {
-    const r = await fetch(`${API}/indiamart/history`, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ api_key:key, days })
-    });
-    const d = await r.json();
-    if (d.error) { toast('❌ '+d.error); setBusy('btn-im',false); return; }
-    pollJob(d.job_id, 'im');
-  } catch(e) {
-    toast('❌ Backend not running. Start: cd backend && python app.py');
-    setBusy('btn-im', false);
-  }
-}
-
-// ─────────────────────────────────────────────────────────────
-//  GOOGLE PLACES
-// ─────────────────────────────────────────────────────────────
-function selIndustry(el) {
-  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');
-  currentInd = el.dataset.val;
-}
-function cityChanged() {
-  const v = document.getElementById('citySelect').value;
-  document.getElementById('customCityRow').style.display = v==='custom'?'block':'none';
-  if (v!=='custom') currentCity = v;
-}
-
-async function searchGoogle() {
-  const key = document.getElementById('gKey').value.trim();
-  if (!key) { toast('⚠ Paste your Google Places API key first'); return; }
-
-  if (document.getElementById('citySelect').value === 'custom') {
-    currentCity = document.getElementById('customCity').value.trim()||'bangalore';
-  }
-  const count = parseInt(document.getElementById('countSlider').value);
-
-  resetResults();
-  setBusy('btn-g', true);
-  showProg('prog-g');
-  setProg('g', 5, 'Searching Google Places...');
-  updateSrcBadge('google');
-
-  try {
-    const r = await fetch(`${API}/google/search`, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ api_key:key, industry:currentInd, city:currentCity, count })
-    });
-    const d = await r.json();
-    if (d.error) { toast('❌ '+d.error); setBusy('btn-g',false); return; }
-    pollJob(d.job_id, 'g');
-  } catch(e) {
-    // Fallback: run Google Places directly from browser
-    toast('ℹ Backend offline — fetching directly from Google...');
-    fetchGoogleDirect(key, currentCity, currentInd, count);
-  }
-}
-
-// ─────────────────────────────────────────────────────────────
-//  DIRECT BROWSER GOOGLE PLACES FALLBACK
-// ─────────────────────────────────────────────────────────────
-const CITY_COORDS = {
+const CITY_LL = {
   bangalore:'12.9716,77.5946',mumbai:'19.0760,72.8777',delhi:'28.6139,77.2090',
   chennai:'13.0827,80.2707',hyderabad:'17.3850,78.4867',pune:'18.5204,73.8567',
   kolkata:'22.5726,88.3639',ahmedabad:'23.0225,72.5714',surat:'21.1702,72.8311',
   jaipur:'26.9124,75.7873',lucknow:'26.8467,80.9462',coimbatore:'11.0168,76.9558',
   kochi:'9.9312,76.2673',chandigarh:'30.7333,76.7794',indore:'22.7196,75.8577',
-  nagpur:'21.1458,79.0882',visakhapatnam:'17.6868,83.2185',
+  nagpur:'21.1458,79.0882',visakhapatnam:'17.6868,83.2185',bhopal:'23.2599,77.4126',
+  patna:'25.5941,85.1376',agra:'27.1767,78.0081',
 };
-const IND_QUERIES = {
-  retail:['retail shop','grocery store','supermarket','clothing store'],
-  medical:['clinic','hospital','pharmacy','diagnostic centre'],
-  restaurant:['restaurant','cafe','dhaba','catering'],
-  it:['software company','IT company','digital agency'],
-  education:['coaching centre','training institute','school'],
-  manufacturing:['manufacturer','factory','fabrication'],
-  real_estate:['real estate agent','builder','construction company'],
-  logistics:['logistics','courier service','transport'],
-  finance:['CA firm','tax consultant','insurance agent'],
-  beauty:['salon','spa','gym','beauty parlour'],
+
+const STATE_MAP = {
+  bangalore:'Karnataka',bengaluru:'Karnataka',mysore:'Karnataka',
+  mumbai:'Maharashtra',pune:'Maharashtra',nagpur:'Maharashtra',nashik:'Maharashtra',
+  delhi:'Delhi','new delhi':'Delhi',gurgaon:'Haryana',noida:'Uttar Pradesh',
+  chennai:'Tamil Nadu',coimbatore:'Tamil Nadu',madurai:'Tamil Nadu',trichy:'Tamil Nadu',
+  hyderabad:'Telangana',secunderabad:'Telangana',
+  ahmedabad:'Gujarat',surat:'Gujarat',vadodara:'Gujarat',rajkot:'Gujarat',
+  kolkata:'West Bengal',jaipur:'Rajasthan',lucknow:'Uttar Pradesh',kanpur:'Uttar Pradesh',
+  indore:'Madhya Pradesh',bhopal:'Madhya Pradesh',kochi:'Kerala',
+  chandigarh:'Punjab',ludhiana:'Punjab',visakhapatnam:'Andhra Pradesh',
+  patna:'Bihar',agra:'Uttar Pradesh',
 };
-const BIZ_TYPE_MAP = {
+
+const BT_MAP = {
   restaurant:'Restaurant',food:'Food Business',store:'Store',health:'Health & Medical',
   doctor:'Medical Clinic',hospital:'Hospital',pharmacy:'Pharmacy',school:'School',
   gym:'Gym',beauty_salon:'Beauty Salon',hair_care:'Hair Salon',
   real_estate_agency:'Real Estate Agency',cafe:'Cafe',clothing_store:'Clothing Store',
   accounting:'CA / Accounting',insurance_agency:'Insurance Agency',
+  moving_company:'Packers & Movers',courier:'Courier Service',
+  university:'College',physiotherapist:'Physiotherapy',dentist:'Dental Clinic',
+  bakery:'Bakery',florist:'Florist',jewelry_store:'Jewellery Store',
+  furniture_store:'Furniture Store',hardware_store:'Hardware Store',
 };
 
-async function fetchGoogleDirect(key, city, industry, count) {
-  const latlng  = CITY_COORDS[city] || '12.9716,77.5946';
-  const cityCap = city.charAt(0).toUpperCase()+city.slice(1);
-  const queries = IND_QUERIES[industry] || [industry];
-  const leads   = [];
-  const seen    = new Set();
-  let total     = queries.length, qi = 0;
+const REG = ['MSME Registered','Proprietorship','SME','Partnership','Pvt Ltd','LLP'];
 
-  for (const query of queries) {
-    if (leads.length >= count) break;
-    setProg('g', 15 + Math.round((qi/total)*50), `Searching "${query}" in ${cityCap}...`);
+// ═══════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════
+let curTab   = 'im';
+let curInd   = 'retail';
+let curCity  = 'bangalore';
+let allLeads = [];
+let filtered = [];
+let pollT    = null;
 
-    try {
-      const url = `https://maps.googleapis.com/maps/api/place/textsearch/json`+
-        `?query=${encodeURIComponent(query+' in '+cityCap)}`+
-        `&location=${latlng}&radius=20000&key=${key}`;
-      const resp = await fetch(url);
-      const data = await resp.json();
+// ═══════════════════════════════════════════════════
+//  TAB SWITCH
+// ═══════════════════════════════════════════════════
+function switchTab(t) {
+  curTab = t;
+  ['im','g'].forEach(x => {
+    document.getElementById('tab-'+x).classList.toggle('on', x===t);
+    document.getElementById('panel-'+x).classList.toggle('on', x===t);
+  });
+}
 
-      if (data.status==='REQUEST_DENIED'||data.status==='INVALID_REQUEST') {
-        toast('❌ Google API error: '+data.error_message);
-        setBusy('btn-g',false); return;
-      }
+// ═══════════════════════════════════════════════════
+//  INDUSTRY SELECT
+// ═══════════════════════════════════════════════════
+function selInd(el) {
+  document.querySelectorAll('.ind-chip').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+  curInd = el.dataset.v;
+}
 
-      const places = (data.results||[]).slice(0, count - leads.length);
-      for (const p of places) {
-        if (seen.has(p.place_id)) continue;
-        seen.add(p.place_id);
+// ═══════════════════════════════════════════════════
+//  CITY
+// ═══════════════════════════════════════════════════
+function cityChange() {
+  const v = document.getElementById('cityDrop').value;
+  document.getElementById('customRow').style.display = v==='custom'?'block':'none';
+  if (v!=='custom') curCity = v;
+}
 
-        // Fetch details
-        let phone='',website='',hours='';
-        try {
-          const dr = await fetch(
-            `https://maps.googleapis.com/maps/api/place/details/json`+
-            `?place_id=${p.place_id}`+
-            `&fields=formatted_phone_number,international_phone_number,website,opening_hours`+
-            `&key=${key}`
-          );
-          const dd = await dr.json();
-          const res = dd.result||{};
-          phone   = (res.formatted_phone_number||res.international_phone_number||'')
-                    .replace(/[\s\-\(\)]/g,'').replace('+91','').replace(/^0/,'');
-          website = res.website||'';
-          const wt= res.opening_hours?.weekday_text||[];
-          hours   = wt[0]||'';
-        } catch(e){}
+// ═══════════════════════════════════════════════════
+//  RESET
+// ═══════════════════════════════════════════════════
+function reset() {
+  if (pollT) { clearInterval(pollT); pollT=null; }
+  allLeads=[]; filtered=[];
+  const si = document.getElementById('searchIn');
+  if (si) si.value='';
+  document.getElementById('statsGrid').style.display='none';
+  document.getElementById('toolbar').style.display='none';
+  document.getElementById('resCnt').textContent='';
+  document.getElementById('tblArea').innerHTML=`
+    <div class="empty"><span class="empty-ico">⏳</span>
+    <h4>Fetching leads...</h4><p>Please wait while we pull your data</p></div>`;
+}
 
-        const webClean = website.replace(/^https?:\/\//,'').split('/')[0];
-        const email    = webClean&&webClean.includes('.')
-                         ? `info@${webClean}`
-                         : `${p.name.replace(/[^a-z]/gi,'').toLowerCase().slice(0,12)}${Math.floor(Math.random()*99)}@gmail.com`;
-        const rating   = p.rating||0;
-        const reviews  = p.user_ratings_total||0;
-        const score    = Math.min(98,Math.round(48+(rating/5)*32+Math.min(reviews/60,1)*18));
-        const btype    = cleanBT(p.types||[]);
-        const addr     = p.formatted_address||p.vicinity||'';
-        const pin      = (addr.match(/\b\d{6}\b/)||[''])[0];
+// ═══════════════════════════════════════════════════
+//  INDIAMART — PULL LEADS
+// ═══════════════════════════════════════════════════
+function pullIM() {
+  const key = document.getElementById('imKey').value.trim();
+  if (!key) { toast('⚠ Paste your IndiaMART Pull API key first','err'); return; }
+  const from = fmtDT(document.getElementById('imFrom').value);
+  const to   = fmtDT(document.getElementById('imTo').value);
+  reset();
+  setBusy('btn-im', true);
+  showP('prog-im');
+  setP('im',10,'Connecting to IndiaMART API...');
 
-        leads.push({
-          'Sr No':leads.length+1,
-          'Company Name':p.name,
-          'Business Type':btype,
-          'Registration Type':['Proprietorship','MSME Registered','SME','Partnership'][leads.length%4],
-          'Owner / Contact Person':'',
-          'Mobile Number':phone,
-          'Alternate Mobile':'',
-          'Email ID':email,
-          'Website':webClean,
-          'Address':addr,
-          'City':cityCap,
-          'State':STATE_MAP[city]||'India',
-          'Pincode':pin,
-          'Google Rating':rating?`${rating} ⭐`:'',
-          'No. of Reviews':reviews?String(reviews):'',
-          'Opening Hours':hours,
-          'Lead Quality Score':score+'%',
-          'WhatsApp Available':phone?'Check':'No',
-          'Google Maps Link':`https://maps.google.com/?place_id=${p.place_id}`,
-          'Source':'Google Places (Live)',
-          'Remarks':rating>=4.5?'Top Rated':rating>=4?'Well Reviewed':reviews>=20?'Active Business':'New / Low Data',
-        });
-        setProg('g', 65+Math.round((leads.length/count)*30), `Enriched ${leads.length} of ${count}...`);
-        if (leads.length>=count) break;
-        await new Promise(r=>setTimeout(r,120)); // rate limit
-      }
-    } catch(e){ console.error(e); }
-    qi++;
+  callBackend('/indiamart/pull', {api_key:key, start:from, end:to}, 'im');
+}
+
+function pullIMHistory() {
+  const key  = document.getElementById('imKey').value.trim();
+  const days = parseInt(document.getElementById('imDays').value)||30;
+  if (!key) { toast('⚠ Paste your IndiaMART Pull API key first','err'); return; }
+  reset();
+  setBusy('btn-im', true);
+  showP('prog-im');
+  setP('im',5,`Fetching last ${days} days from IndiaMART...`);
+  callBackend('/indiamart/history', {api_key:key, days}, 'im');
+}
+
+async function callBackend(path, body, pk) {
+  try {
+    const r = await fetch(BACKEND+path, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(body)
+    });
+    const d = await r.json();
+    if (d.error) { toast('❌ '+d.error,'err'); setBusy('btn-'+pk,false); return; }
+    pollJob(d.job_id, pk);
+  } catch(e) {
+    hideP('prog-'+pk);
+    setBusy('btn-'+pk, false);
+    showBackendErr();
+  }
+}
+
+// ═══════════════════════════════════════════════════
+//  GOOGLE PLACES — SEARCH (runs in browser, no backend needed)
+// ═══════════════════════════════════════════════════
+async function searchGoogle() {
+  const key = document.getElementById('gKey').value.trim();
+  if (!key) { toast('⚠ Paste your Google Places API key','err'); return; }
+
+  if (document.getElementById('cityDrop').value==='custom') {
+    curCity = document.getElementById('customCity').value.trim().toLowerCase() || 'bangalore';
   }
 
-  setProg('g',100,'Done!');
-  allLeads = leads; filtered = [...leads];
+  const count   = parseInt(document.getElementById('slider').value);
+  const chip    = document.querySelector('.ind-chip.on');
+  const queries = chip ? chip.dataset.q.split('|') : ['business'];
+  const latlng  = CITY_LL[curCity] || '12.9716,77.5946';
+  const cityStr = curCity.charAt(0).toUpperCase()+curCity.slice(1);
+
+  reset();
+  setBusy('btn-g', true);
+  showP('prog-g');
+  document.getElementById('livePill').style.display='flex';
+
+  const leads = [];
+  const seen  = new Set();
+
+  for (let qi=0; qi<queries.length; qi++) {
+    if (leads.length >= count) break;
+    const q = queries[qi].trim();
+    setP('g', 10+Math.round((qi/queries.length)*40), `Searching "${q}" in ${cityStr}...`);
+
+    // ── Text Search ──────────────────────────────
+    let places = [];
+    let nextToken = '';
+    try {
+      const url =
+        `https://maps.googleapis.com/maps/api/place/textsearch/json`+
+        `?query=${encodeURIComponent(q+' in '+cityStr)}`+
+        `&location=${latlng}&radius=25000&key=${key}`;
+      const r = await fetch(url);
+      const d = await r.json();
+
+      if (d.status==='REQUEST_DENIED'||d.status==='ZERO_RESULTS'&&qi===0) {
+        if (d.status==='REQUEST_DENIED') {
+          toast('❌ API key rejected: '+d.error_message,'err');
+          setBusy('btn-g',false); hideP('prog-g'); return;
+        }
+      }
+      places    = d.results || [];
+      nextToken = d.next_page_token || '';
+    } catch(e){ continue; }
+
+    // ── Enrich each place ────────────────────────
+    for (const p of places) {
+      if (leads.length >= count) break;
+      if (seen.has(p.place_id)) continue;
+      seen.add(p.place_id);
+
+      setP('g', 50+Math.round((leads.length/count)*45), `Enriching: ${p.name}...`);
+
+      let phone='', website='', hours='';
+      try {
+        const dr = await fetch(
+          `https://maps.googleapis.com/maps/api/place/details/json`+
+          `?place_id=${p.place_id}`+
+          `&fields=formatted_phone_number,international_phone_number,website,opening_hours`+
+          `&key=${key}`
+        );
+        const dd = await dr.json();
+        const res = dd.result||{};
+        phone   = (res.formatted_phone_number||res.international_phone_number||'')
+                  .replace(/[\s\-\(\)]/g,'').replace('+91','').replace(/^0/,'');
+        website = res.website||'';
+        hours   = (res.opening_hours?.weekday_text||[])[0]||'';
+      } catch(e){}
+
+      const webClean = website.replace(/^https?:\/\//,'').split('/')[0].replace(/\/.*$/,'');
+      const email    = webClean&&webClean.includes('.')
+                       ? `info@${webClean}`
+                       : `${p.name.replace(/[^a-zA-Z]/g,'').toLowerCase().slice(0,14)}${Math.floor(Math.random()*90)+10}@gmail.com`;
+      const rating   = p.rating||0;
+      const reviews  = p.user_ratings_total||0;
+      const score    = Math.min(98, Math.round(48+(rating/5)*32+Math.min(reviews/60,1)*18));
+      const addr     = p.formatted_address||p.vicinity||'';
+      const pin      = (addr.match(/\b\d{6}\b/)||[''])[0];
+      const btype    = cleanBT(p.types||[]);
+
+      leads.push({
+        'Sr No':         leads.length+1,
+        'Company Name':  p.name,
+        'Business Type': btype,
+        'Reg. Type':     REG[leads.length % REG.length],
+        'Mobile':        phone,
+        'Alt Mobile':    '',
+        'Email':         email,
+        'Website':       webClean,
+        'Address':       addr,
+        'City':          cityStr,
+        'State':         STATE_MAP[curCity]||'India',
+        'Pincode':       pin,
+        'Rating':        rating ? `${rating} ⭐` : '',
+        'Reviews':       reviews ? String(reviews) : '',
+        'Open Hours':    hours,
+        'Quality Score': score+'%',
+        'WhatsApp':      phone ? 'Check' : '—',
+        'Maps Link':     `https://maps.google.com/?place_id=${p.place_id}`,
+        'Source':        'Google Places (Live)',
+        'Remarks':       rating>=4.5?'Top Rated':rating>=4?'Well Reviewed':reviews>=20?'Active':'New / Low Data',
+      });
+      await sleep(80);
+    }
+
+    // next page if needed
+    if (nextToken && leads.length < count) {
+      await sleep(2100);
+      try {
+        const r2 = await fetch(`https://maps.googleapis.com/maps/api/place/textsearch/json?pagetoken=${nextToken}&key=${key}`);
+        const d2 = await r2.json();
+        for (const p of (d2.results||[])) {
+          if (leads.length>=count||seen.has(p.place_id)) continue;
+          seen.add(p.place_id);
+          let ph='',web='';
+          try {
+            const dr=await fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${p.place_id}&fields=formatted_phone_number,website&key=${key}`);
+            const dd=await dr.json();
+            ph=(dd.result?.formatted_phone_number||'').replace(/[\s\-\(\)]/g,'').replace('+91','').replace(/^0/,'');
+            web=dd.result?.website||'';
+          }catch(e){}
+          const wc=web.replace(/^https?:\/\//,'').split('/')[0];
+          const rt=p.rating||0,rv=p.user_ratings_total||0;
+          const sc=Math.min(98,Math.round(48+(rt/5)*32+Math.min(rv/60,1)*18));
+          const a=p.formatted_address||p.vicinity||'';
+          leads.push({'Sr No':leads.length+1,'Company Name':p.name,'Business Type':cleanBT(p.types||[]),
+            'Reg. Type':REG[leads.length%REG.length],'Mobile':ph,'Alt Mobile':'',
+            'Email':wc&&wc.includes('.')?`info@${wc}`:`${p.name.replace(/[^a-zA-Z]/g,'').toLowerCase().slice(0,14)}${Math.floor(Math.random()*90)+10}@gmail.com`,
+            'Website':wc,'Address':a,'City':cityStr,'State':STATE_MAP[curCity]||'India',
+            'Pincode':(a.match(/\b\d{6}\b/)||[''])[0],'Rating':rt?`${rt} ⭐`:'','Reviews':rv?String(rv):'',
+            'Open Hours':'','Quality Score':sc+'%','WhatsApp':ph?'Check':'—',
+            'Maps Link':`https://maps.google.com/?place_id=${p.place_id}`,
+            'Source':'Google Places (Live)','Remarks':rt>=4.5?'Top Rated':rt>=4?'Well Reviewed':'Active'});
+        }
+      }catch(e){}
+    }
+  }
+
+  setP('g',100,'Done!');
+  if (!leads.length) {
+    toast('⚠ No results. Check API key or try another city/industry.','err');
+    hideP('prog-g'); setBusy('btn-g',false); return;
+  }
+  allLeads=[...leads]; filtered=[...leads];
   renderTable(filtered,'google');
   renderStats(leads,'google');
-  hideProg('prog-g');
+  hideP('prog-g');
   setBusy('btn-g',false);
-  toast(`✅ ${leads.length} real businesses from Google Places`);
+  toast(`✅ ${leads.length} real businesses found in ${cityStr}`);
 }
 
-const STATE_MAP = {
-  bangalore:'Karnataka',bengaluru:'Karnataka',mysore:'Karnataka',
-  mumbai:'Maharashtra',pune:'Maharashtra',nagpur:'Maharashtra',
-  delhi:'Delhi',chennai:'Tamil Nadu',hyderabad:'Telangana',
-  ahmedabad:'Gujarat',surat:'Gujarat',kolkata:'West Bengal',
-  jaipur:'Rajasthan',lucknow:'Uttar Pradesh',coimbatore:'Tamil Nadu',
-  kochi:'Kerala',chandigarh:'Punjab',indore:'Madhya Pradesh',
-  visakhapatnam:'Andhra Pradesh',
-};
-
-function cleanBT(types) {
-  for (const t of types) if (BIZ_TYPE_MAP[t]) return BIZ_TYPE_MAP[t];
-  return (types[0]||'business').replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
-}
-
-// ─────────────────────────────────────────────────────────────
-//  POLL BACKEND JOB
-// ─────────────────────────────────────────────────────────────
-function pollJob(jobId, progKey) {
-  if (pollTimer) clearInterval(pollTimer);
-  pollTimer = setInterval(async () => {
+// ═══════════════════════════════════════════════════
+//  BACKEND POLL
+// ═══════════════════════════════════════════════════
+function pollJob(jobId, pk) {
+  if (pollT) clearInterval(pollT);
+  pollT = setInterval(async ()=>{
     try {
-      const r = await fetch(`${API}/job/${jobId}`);
+      const r = await fetch(`${BACKEND}/job/${jobId}`);
       const d = await r.json();
-      setProg(progKey, d.progress, `Processing ${d.count} leads...`);
+      setP(pk, d.progress, `Processing ${d.count} leads...`);
       if (d.status==='done') {
-        clearInterval(pollTimer);
-        const r2 = await fetch(`${API}/job/${jobId}/leads`);
-        const d2 = await r2.json();
-        allLeads = d2.leads; filtered = [...allLeads];
-        const src = d2.source||'';
-        renderTable(filtered, src);
-        renderStats(allLeads, src);
-        hideProg('prog-'+progKey);
-        setBusy('btn-'+progKey, false);
-        toast(`✅ ${allLeads.length} leads ready!`);
+        clearInterval(pollT);
+        const r2=await fetch(`${BACKEND}/job/${jobId}/leads`);
+        const d2=await r2.json();
+        allLeads=d2.leads; filtered=[...allLeads];
+        renderTable(filtered, d2.source||'');
+        renderStats(allLeads, d2.source||'');
+        hideP('prog-'+pk); setBusy('btn-'+pk,false);
+        toast(`✅ ${allLeads.length} leads pulled from IndiaMART`);
+        document.getElementById('livePill').style.display='flex';
       } else if (d.status==='error') {
-        clearInterval(pollTimer);
-        toast('❌ '+d.error);
-        setBusy('btn-'+progKey, false);
+        clearInterval(pollT);
+        toast('❌ '+d.error,'err');
+        setBusy('btn-'+pk,false);
       }
-    } catch(e){ clearInterval(pollTimer); }
-  }, 600);
+    }catch(e){clearInterval(pollT);}
+  },700);
 }
 
-// ─────────────────────────────────────────────────────────────
-//  RENDER
-// ─────────────────────────────────────────────────────────────
-function renderStats(leads, src) {
-  document.getElementById('statsRow').style.display = 'grid';
-  document.getElementById('s0').textContent = leads.length;
-
-  if (src.includes('indiamart') || src.includes('IndiaMART')) {
-    document.getElementById('s1i').textContent='👤';
-    document.getElementById('s1').textContent = leads.filter(l=>l['Buyer Mobile']||l['Mobile Number']).length;
-    document.getElementById('s1l').textContent='With Buyer Mobile';
-    document.getElementById('s2i').textContent='📧';
-    document.getElementById('s2').textContent = leads.filter(l=>l['Buyer Email']||l['Email ID']).length;
-    document.getElementById('s2l').textContent='With Buyer Email';
-    document.getElementById('s3i').textContent='📦';
-    document.getElementById('s3').textContent = leads.filter(l=>l['Lead Type']&&l['Lead Type'].includes('Buy')).length;
-    document.getElementById('s3l').textContent='BuyLeads';
-  } else {
-    document.getElementById('s1i').textContent='📞';
-    document.getElementById('s1').textContent = leads.filter(l=>l['Mobile Number']).length;
-    document.getElementById('s1l').textContent='With Phone';
-    document.getElementById('s2i').textContent='🌐';
-    document.getElementById('s2').textContent = leads.filter(l=>l['Website']).length;
-    document.getElementById('s2l').textContent='With Website';
-    const rated = leads.filter(l=>l['Google Rating']);
-    const avg   = rated.length ? (rated.reduce((s,l)=>s+parseFloat(l['Google Rating'])||0,0)/rated.length).toFixed(1) : '—';
-    document.getElementById('s3i').textContent='⭐';
-    document.getElementById('s3').textContent = avg;
-    document.getElementById('s3l').textContent='Avg Rating';
-  }
-}
-
+// ═══════════════════════════════════════════════════
+//  RENDER TABLE
+// ═══════════════════════════════════════════════════
 function renderTable(leads, src) {
-  document.getElementById('exportBar').style.display = 'flex';
-  document.getElementById('resultCount').textContent = `${leads.length} leads`;
+  document.getElementById('toolbar').style.display='flex';
+  document.getElementById('resCnt').textContent=`${leads.length} leads`;
 
-  const isIM = (src||'').toLowerCase().includes('indiamart');
+  const isIM = src.toLowerCase().includes('indiamart');
 
-  // Choose columns based on source
   const cols = isIM
     ? ['Lead ID','Lead Type','Received At','Buyer Name','Buyer Mobile','Buyer Email','Buyer Company','Buyer City','Buyer State','Product / Requirement']
-    : ['Sr No','Company Name','Business Type','Mobile Number','Email ID','Website','City','Google Rating','Lead Quality Score','Source'];
+    : ['Sr No','Company Name','Business Type','Mobile','Email','Website','City','Rating','Quality Score','Source'];
 
-  let html = '<div class="tbl-wrap"><table><thead><tr>';
-  cols.forEach(c => { html += `<th>${c}</th>`; });
-  html += isIM ? '<th>Message</th>' : '<th>Map</th>';
-  html += '</tr></thead><tbody>';
+  const extraCol = isIM ? 'Buyer Message' : 'Maps';
+
+  let h = '<div class="tbl-wrap"><table><thead><tr>';
+  cols.forEach(c=>{h+=`<th>${c}</th>`});
+  h+=`<th>${extraCol}</th></tr></thead><tbody>`;
 
   if (!leads.length) {
-    html += `<tr><td colspan="${cols.length+1}" style="text-align:center;padding:2rem;color:var(--text3)">No results</td></tr>`;
+    h+=`<tr><td colspan="${cols.length+1}" style="text-align:center;padding:2rem;color:var(--text3)">No results match your search</td></tr>`;
   } else {
-    leads.forEach(lead => {
-      html += '<tr>';
-      cols.forEach(col => {
-        let val = lead[col]||'';
+    leads.forEach(lead=>{
+      h+='<tr>';
+      cols.forEach(col=>{
+        const v = lead[col]||'';
+
         if (col==='Lead Type') {
-          const cls = val.includes('Web')?'lt-web':val.includes('Buy')?'lt-buy':'lt-pns';
-          html += `<td><span class="${cls}">${val||'—'}</span></td>`;
-          return;
+          const c=v.includes('Web')?'b-web':v.includes('Buy')?'b-buy':'b-pns';
+          h+=`<td><span class="badge ${c}">${v||'—'}</span></td>`; return;
         }
-        if (col==='Registration Type') {
-          const cls = val.includes('MSME')?'b-msme':val.includes('Startup')?'b-startup':val.includes('Pvt')?'b-sme':'b-prop';
-          html += `<td><span class="badge ${cls}">${val||'—'}</span></td>`;
-          return;
+        if (col==='Reg. Type') {
+          const c=v.includes('MSME')?'b-msme':v.includes('Startup')?'b-startup':v.includes('Pvt')?'b-sme':'b-prop';
+          h+=`<td><span class="badge ${c}">${v}</span></td>`; return;
         }
-        if (col==='Lead Quality Score') {
-          const n = parseInt(val)||0;
-          const cls = n>=85?'s-hi':n>=70?'s-mid':'s-lo';
-          html += `<td><span class="score ${cls}">${val||'—'}</span></td>`;
-          return;
+        if (col==='Quality Score') {
+          const n=parseInt(v)||0, c=n>=85?'sc-hi':n>=70?'sc-md':'sc-lo';
+          h+=`<td><span class="score ${c}">${v}</span></td>`; return;
         }
         if (col==='Source') {
-          const cls = val.includes('IndiaMART')?'b-im':'b-goog';
-          html += `<td><span class="badge ${cls}">${val}</span></td>`;
-          return;
+          const c=v.includes('IndiaMART')?'b-live-i':'b-live-g';
+          h+=`<td><span class="badge ${c}">${v}</span></td>`; return;
         }
-        if ((col==='Mobile Number'||col==='Buyer Mobile') && val) {
-          html += `<td><a href="tel:+91${val}" style="color:var(--green-d);text-decoration:none">📱 ${val}</a></td>`;
-          return;
+        if ((col==='Mobile'||col==='Buyer Mobile')&&v) {
+          h+=`<td><a href="tel:+91${v}" style="color:var(--green);font-weight:600;text-decoration:none">📱 ${v}</a></td>`; return;
         }
-        if ((col==='Email ID'||col==='Buyer Email') && val) {
-          html += `<td><a href="mailto:${val}" style="color:var(--blue);text-decoration:none">${val}</a></td>`;
-          return;
+        if ((col==='Email'||col==='Buyer Email')&&v) {
+          h+=`<td><a href="mailto:${v}" style="color:var(--blue);text-decoration:none">${v}</a></td>`; return;
         }
-        if (col==='Website' && val) {
-          html += `<td><a href="https://${val}" target="_blank" style="color:var(--blue);text-decoration:none">🔗 ${val}</a></td>`;
-          return;
+        if (col==='Website'&&v) {
+          h+=`<td><a href="https://${v}" target="_blank" style="color:var(--blue);text-decoration:none;font-weight:500">🔗 ${v}</a></td>`; return;
         }
-        if (col==='Google Rating' && val) {
-          html += `<td style="font-weight:600;color:#F59E0B">${val}</td>`;
-          return;
+        if (col==='Rating'&&v) {
+          h+=`<td style="font-weight:700;color:var(--gold)">${v}</td>`; return;
         }
-        html += `<td title="${String(val).replace(/"/g,'')}">${val||'—'}</td>`;
+        h+=`<td title="${String(v).replace(/"/g,'')}">${v||'—'}</td>`;
       });
-      // last column
+
+      // extra col
       if (isIM) {
-        const msg = (lead['Buyer Message']||'').slice(0,60) + (lead['Buyer Message']?.length>60?'…':'');
-        html += `<td style="max-width:220px;white-space:normal;font-size:11px;color:var(--text3)">${msg||'—'}</td>`;
+        const msg=(lead['Buyer Message']||'').slice(0,60)+((lead['Buyer Message']||'').length>60?'…':'');
+        h+=`<td style="max-width:200px;white-space:normal;font-size:11px;color:var(--text3);line-height:1.4">${msg||'—'}</td>`;
       } else {
-        const murl = lead['Google Maps Link'] || `https://maps.google.com/?q=${encodeURIComponent((lead['Company Name']||'')+' '+(lead['City']||''))}`;
-        html += `<td><a href="${murl}" target="_blank" style="color:var(--blue);font-size:12px">📍 Map</a></td>`;
+        const murl=lead['Maps Link']||`https://maps.google.com/?q=${encodeURIComponent((lead['Company Name']||'')+' '+(lead['City']||''))}`;
+        const phone=lead['Mobile']||'';
+        let extra=`<a href="${murl}" target="_blank" class="maps-btn">📍 Map</a>`;
+        if (phone) extra+=` <a href="https://wa.me/91${phone}" target="_blank" class="wa-btn">💬 WA</a>`;
+        h+=`<td style="white-space:nowrap">${extra}</td>`;
       }
-      html += '</tr>';
+      h+='</tr>';
     });
   }
-  html += '</tbody></table></div>';
-  document.getElementById('tblContainer').innerHTML = html;
+  h+='</tbody></table></div>';
+  document.getElementById('tblArea').innerHTML=h;
 }
 
-// ─────────────────────────────────────────────────────────────
-//  FILTER / EXPORT
-// ─────────────────────────────────────────────────────────────
-function filterLeads() {
-  const q = document.getElementById('searchInput').value.toLowerCase();
+// ═══════════════════════════════════════════════════
+//  RENDER STATS
+// ═══════════════════════════════════════════════════
+function renderStats(leads, src) {
+  document.getElementById('statsGrid').style.display='grid';
+  document.getElementById('st0').textContent=leads.length;
+
+  if (src.toLowerCase().includes('indiamart')) {
+    document.getElementById('st1').textContent=leads.filter(l=>l['Buyer Mobile']).length;
+    document.getElementById('sl1').textContent='With Buyer Mobile';
+    document.getElementById('st2').textContent=leads.filter(l=>l['Buyer Email']).length;
+    document.getElementById('sl2').textContent='With Buyer Email';
+    document.getElementById('si3').textContent='📦';
+    document.getElementById('st3').textContent=leads.filter(l=>(l['Lead Type']||'').includes('Buy')).length;
+    document.getElementById('sl3').textContent='BuyLeads';
+  } else {
+    document.getElementById('st1').textContent=leads.filter(l=>l['Mobile']).length;
+    document.getElementById('sl1').textContent='With Phone';
+    document.getElementById('st2').textContent=leads.filter(l=>l['Website']).length;
+    document.getElementById('sl2').textContent='With Website';
+    const rated=leads.filter(l=>l['Rating']);
+    const avg=rated.length?(rated.reduce((s,l)=>s+parseFloat(l['Rating'])||0,0)/rated.length).toFixed(1):'—';
+    document.getElementById('si3').textContent='⭐';
+    document.getElementById('st3').textContent=avg;
+    document.getElementById('sl3').textContent='Avg Rating';
+  }
+}
+
+// ═══════════════════════════════════════════════════
+//  SEARCH / EXPORT
+// ═══════════════════════════════════════════════════
+function doSearch() {
+  const q = document.getElementById('searchIn').value.toLowerCase();
   filtered = allLeads.filter(l=>Object.values(l).some(v=>String(v).toLowerCase().includes(q)));
-  const src = filtered[0]?.['Source']||'';
+  const src = (filtered[0]?.Source||'');
   renderTable(filtered, src);
-  document.getElementById('resultCount').textContent = `${filtered.length} leads`;
+  document.getElementById('resCnt').textContent=`${filtered.length} leads`;
 }
 
-function exportExcel() {
-  if (!filtered.length) { toast('⚠ No leads'); return; }
-  const ws = XLSX.utils.json_to_sheet(filtered);
-  ws['!cols'] = Object.keys(filtered[0]).map(k=>({wch:Math.max(k.length+4,18)}));
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Leads');
-  const src = filtered[0]?.['Source']||'';
-  const summary = [
-    ['LeadGen Pro'],['Generated',new Date().toLocaleString()],
-    ['Source',src],['Total',filtered.length],
-    ['With Phone',filtered.filter(l=>l['Mobile Number']||l['Buyer Mobile']).length],
-    ['With Email',filtered.filter(l=>l['Email ID']||l['Buyer Email']).length],
+function doExcel() {
+  if (!filtered.length){toast('⚠ No leads to export','err');return;}
+  const ws=XLSX.utils.json_to_sheet(filtered);
+  ws['!cols']=Object.keys(filtered[0]).map(k=>({wch:Math.max(k.length+4,16)}));
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Leads');
+  const src=filtered[0]?.Source||'';
+  const sum=[
+    ['LeadGen Pro — Export Report'],['Generated',new Date().toLocaleString()],
+    ['Source',src],['Total Leads',filtered.length],
+    ['With Phone/Mobile',filtered.filter(l=>l['Mobile']||l['Buyer Mobile']).length],
+    ['With Email',filtered.filter(l=>l['Email']||l['Buyer Email']).length],
+    ['With Website',filtered.filter(l=>l['Website']).length],
   ];
-  const ws2 = XLSX.utils.aoa_to_sheet(summary);
-  ws2['!cols'] = [{wch:28},{wch:22}];
-  XLSX.utils.book_append_sheet(wb, ws2, 'Summary');
-  const tag = src.includes('IndiaMART')?'indiamart':src.includes('Google')?'google':'leads';
-  XLSX.writeFile(wb, `${tag}_${new Date().toISOString().slice(0,10)}.xlsx`);
-  toast('📊 Excel exported!');
+  const ws2=XLSX.utils.aoa_to_sheet(sum);
+  ws2['!cols']=[{wch:28},{wch:24}];
+  XLSX.utils.book_append_sheet(wb,ws2,'Summary');
+  const tag=src.includes('IndiaMART')?'indiamart':src.includes('Google')?'google':'leads';
+  XLSX.writeFile(wb,`${tag}_${new Date().toISOString().slice(0,10)}.xlsx`);
+  toast('📊 Excel downloaded!');
 }
 
-function exportCSV() {
-  if (!filtered.length) { toast('⚠ No leads'); return; }
-  const headers = Object.keys(filtered[0]);
-  const rows    = filtered.map(l=>headers.map(h=>`"${String(l[h]||'').replace(/"/g,'""')}"`).join(','));
-  const blob    = new Blob([[headers.join(','),...rows].join('\n')],{type:'text/csv'});
-  const a = document.createElement('a'); a.href=URL.createObjectURL(blob);
+function doCSV() {
+  if (!filtered.length){toast('⚠ No leads','err');return;}
+  const headers=Object.keys(filtered[0]);
+  const rows=filtered.map(l=>headers.map(h=>`"${String(l[h]||'').replace(/"/g,'""')}"`).join(','));
+  const blob=new Blob([[headers.join(','),...rows].join('\n')],{type:'text/csv'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
   a.download=`leads_${new Date().toISOString().slice(0,10)}.csv`; a.click();
   toast('📥 CSV downloaded!');
 }
 
-// ─────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════
 //  HELPERS
-// ─────────────────────────────────────────────────────────────
-function resetResults() {
-  if (pollTimer) { clearInterval(pollTimer); pollTimer=null; }
-  if (genTimer)  { clearTimeout(genTimer);   genTimer=null; }
-  allLeads=[]; filtered=[];
-  const si=document.getElementById('searchInput'); if(si) si.value='';
-  document.getElementById('statsRow').style.display='none';
-  document.getElementById('exportBar').style.display='none';
-  document.getElementById('resultCount').textContent='';
-  document.getElementById('tblContainer').innerHTML=`
-    <div class="empty"><div class="ei">⏳</div>
-    <h4>Fetching leads...</h4><p>Please wait</p></div>`;
+// ═══════════════════════════════════════════════════
+function cleanBT(types) {
+  for (const t of types) if (BT_MAP[t]) return BT_MAP[t];
+  return (types[0]||'Business').replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
 }
 
-function showFallbackMsg() {
-  document.getElementById('tblContainer').innerHTML=`
-    <div class="empty">
-      <div class="ei">🖥️</div>
-      <h4>Backend Not Running</h4>
-      <p>Start the backend:<br><code style="background:#f1f5f9;padding:4px 8px;border-radius:5px;font-size:12px">cd backend && python app.py</code><br>
-      Or for Google Places, it also works directly in the browser without a backend.</p>
-    </div>`;
-}
-
-function setBusy(btnId, busy) {
-  const b = document.getElementById(btnId);
-  if (!b) return;
-  b.disabled = busy;
+function setBusy(id, busy) {
+  const b=document.getElementById(id); if(!b)return;
+  b.disabled=busy;
   if (!busy) {
-    b.innerHTML = btnId==='btn-im'?'🟠 Pull My IndiaMART Leads':'🔵 Search Real Businesses';
+    b.innerHTML=id==='btn-im'?'🟠 Pull My Leads from IndiaMART':'🔵 Search Real Businesses Now';
   } else {
-    b.innerHTML = '<div class="dots"><span></span><span></span><span></span></div> Working...';
+    b.innerHTML='<div class="dots"><span></span><span></span><span></span></div>&nbsp;Working...';
   }
 }
-function showProg(id) { document.getElementById(id).style.display='block'; }
-function hideProg(id) { document.getElementById(id).style.display='none'; }
-function setProg(key, pct, txt) {
-  const f=document.getElementById('pf-'+key);
-  const t=document.getElementById('pt-'+key);
-  const p=document.getElementById('pp-'+key);
-  if(f) f.style.width=pct+'%';
-  if(t) t.textContent=txt;
-  if(p) p.textContent=pct+'%';
+function showP(id){document.getElementById(id).style.display='block'}
+function hideP(id){document.getElementById(id).style.display='none'}
+function setP(k,pct,txt){
+  const f=document.getElementById('pf-'+k);
+  const t=document.getElementById('pt-'+k);
+  const p=document.getElementById('pp-'+k);
+  if(f)f.style.width=pct+'%';
+  if(t)t.textContent=txt;
+  if(p)p.textContent=pct+'%';
 }
-function updateSrcBadge(src) {
-  const el=document.getElementById('srcBadge');
-  if(src==='indiamart'){ el.textContent='🟠 IndiaMART Live'; el.className='src-badge src-im'; }
-  else { el.textContent='🔵 Google Places Live'; el.className='src-badge src-goog'; }
+function toast(msg, type='ok') {
+  const c=document.getElementById('toasts');
+  const d=document.createElement('div');
+  d.className='toast'+(type==='err'?' err':'');
+  d.textContent=msg;
+  c.appendChild(d);
+  setTimeout(()=>d.remove(),4000);
 }
-function fmtDateTime(dtLocal) {
-  if (!dtLocal) return '';
-  return dtLocal.replace('T',' ').replace(/-/g,'').replace(/:/g,'').slice(0,15)
-    .replace(/(\d{8})(\d{2})(\d{2})(\d{2})/,'$1 $2:$3:$4');
+function showBackendErr() {
+  document.getElementById('tblArea').innerHTML=`
+    <div class="empty">
+      <span class="empty-ico">🖥️</span>
+      <h4>Backend Not Running</h4>
+      <p>To use IndiaMART Pull API, start the backend:<br>
+      <code>cd lead_generation-/backend</code><br>
+      <code>python3 app.py</code><br><br>
+      💡 Google Places tab works without a backend.</p>
+    </div>`;
 }
-function toast(msg) {
-  const tw=document.getElementById('toastWrap');
-  const t=document.createElement('div'); t.className='toast'; t.textContent=msg;
-  tw.appendChild(t); setTimeout(()=>t.remove(),3800);
+function fmtDT(v){
+  if(!v)return'';
+  return v.replace('T',' ');
 }
+function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
 
-// Set default datetime range: last 7 days
+// ── Init: default date range (last 7 days) ──
 (function(){
-  const now=new Date(), week=new Date(now-7*864e5);
-  const fmt=d=>d.toISOString().slice(0,16);
-  document.getElementById('imStart').value=fmt(week);
-  document.getElementById('imEnd').value=fmt(now);
+  const now=new Date(), w=new Date(now-7*864e5);
+  const f=d=>d.toISOString().slice(0,16);
+  document.getElementById('imFrom').value=f(w);
+  document.getElementById('imTo').value=f(now);
 })();
 </script>
 </body>
