@@ -1,0 +1,55 @@
+name: Daily Lead Generation
+
+on:
+  schedule:
+    - cron: '0 2 * * *'   # Every day at 7:30 AM IST (2:00 UTC)
+  workflow_dispatch:        # Also allow manual trigger from GitHub UI
+    inputs:
+      industry:
+        description: 'Industry (retail/medical/it/restaurant/education/manufacturing/real_estate/logistics/finance/beauty)'
+        required: false
+        default: 'retail'
+      city:
+        description: 'City name'
+        required: false
+        default: 'Bangalore'
+      count:
+        description: 'Number of leads (10-100)'
+        required: false
+        default: '50'
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # needed to push data back to repo
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests openpyxl
+
+      - name: Generate leads
+        run: python3 backend/generate_daily.py
+        env:
+          INDUSTRY: ${{ github.event.inputs.industry || 'retail' }}
+          CITY:     ${{ github.event.inputs.city     || 'Bangalore' }}
+          COUNT:    ${{ github.event.inputs.count    || '50' }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+
+      - name: Commit and push new leads
+        run: |
+          git config user.name  "LeadGen Bot"
+          git config user.email "bot@leadgen.pro"
+          git add data/leads/ docs/
+          git diff --staged --quiet || git commit -m "🎯 Daily leads $(date '+%d %b %Y') — ${{ github.event.inputs.city || 'Bangalore' }}"
+          git push
