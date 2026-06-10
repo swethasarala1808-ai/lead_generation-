@@ -1,91 +1,80 @@
-# 🎯 LeadGen Pro — IndiaMART + Google Places Lead Generator
+# 🎯 LeadGen Pro — Daily B2B Lead Generator
 
-Works exactly like IndiaMART Lead Manager — pull real buyer enquiries + search real businesses.
+Auto-generates fresh B2B leads every day using GitHub Actions + OpenStreetMap.
 
-## Two Data Sources
+## 🌐 Live Site
+After setup: `https://swethasarala1808-ai.github.io/lead_generation-/`
 
-### 🟠 IndiaMART Pull API (Real Buyer Enquiries)
-Pulls actual enquiries sent to YOUR seller account on IndiaMART.
+## ⚡ Quick Setup (5 minutes)
 
-**What you get:**
-- Buyer name, mobile, email, company
-- City, state, pincode
-- Product / requirement they asked for
-- Buyer message
-- Lead type: Web Enquiry, BuyLead, PNS Call
-- Date/time received
-
-**How to get your API key:**
-1. Login at https://seller.indiamart.com
-2. Lead Manager → ⋮ → Import/Export → Pull API
-3. Click "Generate Key"
-4. Requires: **Paid IndiaMART seller account** (Leader or Star plan)
-
-**API Endpoint used:** `https://mapi.indiamart.com/wservce/crm/crmListing/v2/`
-
----
-
-### 🔵 Google Places API (Real Business Search)
-Finds real registered businesses in any Indian city.
-
-**What you get:**
-- Real business name, phone, address
-- Website URL
-- Google rating + review count
-- Opening hours
-- Direct Google Maps link
-
-**How to get your API key:**
-1. Go to https://console.cloud.google.com
-2. Enable "Places API"
-3. Credentials → Create API Key
-4. $200 free credit/month (~28,500 searches)
-
----
-
-## Quick Start
-
-### Frontend Only (no backend needed for Google)
-Open `frontend/index.html` in browser.
-- Google tab works directly from browser
-- IndiaMART tab needs the backend running
-
-### With Backend (recommended for IndiaMART)
+### Step 1 — Clone and push
 ```bash
-cd backend
-pip install -r ../requirements.txt
-python app.py
-# Opens at http://localhost:5000
+git clone https://github.com/swethasarala1808-ai/lead_generation-.git
+cd lead_generation-
+git pull origin main
 ```
-Then open `frontend/index.html`
+
+### Step 2 — Enable GitHub Pages
+1. Go to your repo on GitHub → **Settings**
+2. Click **Pages** in the left sidebar
+3. Under **Source**: select `Deploy from a branch`
+4. Branch: `main` | Folder: `/docs`
+5. Click **Save**
+6. Wait 2 minutes → site is live at `https://swethasarala1808-ai.github.io/lead_generation-/`
+
+### Step 3 — Run first lead generation
+1. Go to **Actions** tab in your repo
+2. Click **Daily Lead Generation**
+3. Click **Run workflow** → choose industry & city → Run
+4. Wait 2-3 minutes → refresh your site → leads appear!
+
+### Step 4 — Daily auto-run (already configured)
+GitHub Actions runs automatically every day at **7:30 AM IST**. No setup needed.
 
 ---
 
-## Project Structure
+## 📊 What you get every day
+- Real business names, phones, addresses from OpenStreetMap
+- Excel + CSV download from the site
+- 7+ days of history to browse
+- Filters: by phone, website, area, rating
+- Click-to-call, WhatsApp, Google Maps per lead
+
+## 🔧 Customize
+
+### Change industry / city
+Edit `.github/workflows/daily_leads.yml`:
+```yaml
+env:
+  INDUSTRY: medical      # retail/medical/it/restaurant/education/etc
+  CITY: Mumbai           # any Indian city
+  COUNT: 50
 ```
-lead_generation/
-├── frontend/
-│   └── index.html              # Main app UI
+
+### Add Google Places for more leads
+1. Get free key: https://console.cloud.google.com → Enable Places API
+2. Go to repo → **Settings → Secrets → Actions → New secret**
+3. Name: `GOOGLE_API_KEY`, Value: your key
+4. Run workflow again — now gets Google data too
+
+---
+
+## 📁 Structure
+```
+lead_generation-/
+├── .github/workflows/
+│   └── daily_leads.yml     # Auto-runs every day at 7:30 AM IST
 ├── backend/
-│   ├── app.py                  # Flask API server
-│   ├── indiamart_api.py        # IndiaMART Pull API v2 client
-│   ├── google_places_api.py    # Google Places client
-│   └── excel_exporter.py       # Professional Excel export
-├── exports/                    # Generated Excel files
-├── requirements.txt
+│   └── generate_daily.py   # Lead generation script
+├── data/leads/
+│   └── YYYY-MM-DD.json     # Daily lead files
+├── docs/                   # GitHub Pages site
+│   ├── index.html          # The web app
+│   └── data/
+│       ├── latest.json     # Today's leads
+│       └── history.json    # All past runs index
 └── README.md
 ```
 
-## API Endpoints
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/indiamart/pull` | Pull leads (date range) |
-| POST | `/api/indiamart/history` | Pull historical leads (up to 365 days) |
-| POST | `/api/google/search` | Search businesses by industry + city |
-| GET  | `/api/job/<id>` | Check job status + progress |
-| GET  | `/api/job/<id>/leads` | Get all leads from job |
-| GET  | `/api/job/<id>/export` | Download Excel file |
-| GET  | `/api/health` | Health check |
-
 ---
-Built for India B2B Sales Teams 🇮🇳
+Built for bizaxl sales team 🚀

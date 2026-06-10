@@ -1,13 +1,8 @@
 __pycache__/
-*.py[cod]
-*.egg-info/
-dist/
-build/
+*.pyc
 .env
 venv/
-env/
-exports/*.xlsx
-exports/*.csv
 *.log
-.DS_Store
-node_modules/
+exports/
+backend/__pycache__/
+{backend,frontend,exports}/
