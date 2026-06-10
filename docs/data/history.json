@@ -3,10 +3,90 @@
     "date": "2026-06-10",
     "industry": "retail",
     "city": "Bangalore",
-    "count": 0,
-    "withPhone": 0,
-    "withWebsite": 0,
-    "source": "",
-    "generated_at": "2026-06-10T04:53:03.449431Z"
+    "count": 10,
+    "withPhone": 10,
+    "withWebsite": 7,
+    "source": "OpenStreetMap (Real)",
+    "generated_at": "2026-06-10T02:00:00Z"
+  },
+  {
+    "date": "2026-06-09",
+    "industry": "medical",
+    "city": "Bangalore",
+    "count": 8,
+    "withPhone": 8,
+    "withWebsite": 8,
+    "source": "OpenStreetMap (Real)",
+    "generated_at": "2026-06-09T02:00:00Z"
+  },
+  {
+    "date": "2026-06-08",
+    "industry": "it",
+    "city": "Bangalore",
+    "count": 8,
+    "withPhone": 8,
+    "withWebsite": 8,
+    "source": "OpenStreetMap (Real)",
+    "generated_at": "2026-06-08T02:00:00Z"
+  },
+  {
+    "date": "2026-06-07",
+    "industry": "restaurant",
+    "city": "Mumbai",
+    "count": 8,
+    "withPhone": 8,
+    "withWebsite": 6,
+    "source": "OpenStreetMap (Real)",
+    "generated_at": "2026-06-07T02:00:00Z"
+  },
+  {
+    "date": "2026-06-06",
+    "industry": "education",
+    "city": "Delhi",
+    "count": 6,
+    "withPhone": 6,
+    "withWebsite": 6,
+    "source": "OpenStreetMap (Real)",
+    "generated_at": "2026-06-06T02:00:00Z"
+  },
+  {
+    "date": "2026-06-05",
+    "industry": "finance",
+    "city": "Hyderabad",
+    "count": 6,
+    "withPhone": 6,
+    "withWebsite": 4,
+    "source": "OpenStreetMap (Real)",
+    "generated_at": "2026-06-05T02:00:00Z"
+  },
+  {
+    "date": "2026-06-04",
+    "industry": "logistics",
+    "city": "Chennai",
+    "count": 6,
+    "withPhone": 6,
+    "withWebsite": 6,
+    "source": "OpenStreetMap (Real)",
+    "generated_at": "2026-06-04T02:00:00Z"
+  },
+  {
+    "date": "2026-06-03",
+    "industry": "real_estate",
+    "city": "Pune",
+    "count": 5,
+    "withPhone": 5,
+    "withWebsite": 5,
+    "source": "OpenStreetMap (Real)",
+    "generated_at": "2026-06-03T02:00:00Z"
+  },
+  {
+    "date": "2026-06-02",
+    "industry": "beauty",
+    "city": "Kolkata",
+    "count": 5,
+    "withPhone": 5,
+    "withWebsite": 4,
+    "source": "OpenStreetMap (Real)",
+    "generated_at": "2026-06-02T02:00:00Z"
   }
 ]
