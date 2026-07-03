@@ -1,5 +1,15 @@
 [
   {
+    "date": "2026-07-03",
+    "industry": "retail",
+    "city": "Bangalore",
+    "count": 0,
+    "withPhone": 0,
+    "withWebsite": 0,
+    "source": "",
+    "generated_at": "2026-07-03T06:02:02.103889Z"
+  },
+  {
     "date": "2026-07-02",
     "industry": "retail",
     "city": "Bangalore",
