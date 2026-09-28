@@ -1,5 +1,15 @@
 [
   {
+    "date": "2026-09-28",
+    "industry": "retail",
+    "city": "Bangalore",
+    "count": 0,
+    "withPhone": 0,
+    "withWebsite": 0,
+    "source": "",
+    "generated_at": "2026-09-28T08:37:53.308847Z"
+  },
+  {
     "date": "2026-09-27",
     "industry": "retail",
     "city": "Bangalore",
@@ -888,15 +898,5 @@
     "withWebsite": 0,
     "source": "",
     "generated_at": "2026-06-30T06:22:02.430206Z"
-  },
-  {
-    "date": "2026-06-29",
-    "industry": "retail",
-    "city": "Bangalore",
-    "count": 0,
-    "withPhone": 0,
-    "withWebsite": 0,
-    "source": "",
-    "generated_at": "2026-06-29T07:00:47.974043Z"
   }
 ]
